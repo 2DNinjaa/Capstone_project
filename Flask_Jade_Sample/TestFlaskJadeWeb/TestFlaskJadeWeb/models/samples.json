@@ -1,0 +1,22 @@
+[
+    {
+        "text": "What is your favorite season?",
+        "choices": [
+            "Winter",
+            "Spring",
+            "Summer",
+            "Fall"
+        ]
+    },
+    {
+        "text": "How do you commute to work/school?",
+        "choices": [
+            "Car",
+            "Motorcycle",
+            "Bicycle",
+            "Walk",
+            "Public transportation",
+            "No commute"
+        ]
+    }
+]
