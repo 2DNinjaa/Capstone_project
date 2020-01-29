@@ -1,20 +1,5 @@
-//- if title.includes('Seeker')
-    extends layoutSeeker
-//- else
-    extends layoutManager
 extends layoutSeeker
 
 block content
-  h2 #{title}.
-  - if polls
-      table.table.table-hover
-        tbody
-          - each poll in polls
-            tr
-              td
-                a(href='/poll/#{poll.key}') #{poll.text}
-  - else
-    p No polls available.
-    br
-    form(action='/seed', method='post')
-     button.btn.btn-primary(type='submit') Create Sample Polls
+  h2 #{title}
+  h3 Search for Jobs

@@ -1,0 +1,42 @@
+extends layoutAnon
+
+block content
+  h2 Login
+  br
+  form(action='/seed', method='post')
+    input(
+      type='text'
+      id='userName'
+      name='UserName'
+      placeholder='User Name'
+    ) 
+
+    input(
+     type='password'
+     id='passWord'
+     name='PassWord'
+     placeholder='Password'
+	)
+
+    p 
+      'Job Seeker
+      input(
+        type='checkbox'
+        name='Seeker'
+	  )
+
+    p   
+      'Manager
+      input(
+        type='checkbox'
+        name='Manager'
+	  )
+
+    br
+    button.btn.btn-primary(type='submit') Sign in
+    p
+      'Register
+      input(
+        type='checkbox'
+        name='Register'
+	  )
