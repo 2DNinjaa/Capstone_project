@@ -24,11 +24,6 @@ class Poll(object):
                 if total > 0 else 0
         self.total_votes = total
 
-class User(object):
-    def __init__(self, key=u'', text=u''):
-        self.key = key
-        self.text = text
-
 class Choice(object):
     """A poll choice object for use in the application views and repository."""
     def __init__(self, key=u'', text=u'', votes=0):
