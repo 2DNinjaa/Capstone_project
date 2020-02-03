@@ -71,6 +71,7 @@
     <Content Include="TestFlaskJadeWeb\static\scripts\respond.min.js" />
     <Content Include="TestFlaskJadeWeb\static\scripts\_references.js" />
     <Content Include="TestFlaskJadeWeb\templates\anonHome.jade" />
+    <Content Include="TestFlaskJadeWeb\templates\indexManager.jade" />
     <Content Include="TestFlaskJadeWeb\templates\layoutAnon.jade" />
     <Content Include="TestFlaskJadeWeb\templates\login.jade" />
     <Content Include="TestFlaskJadeWeb\templates\tmpGraph.jade" />

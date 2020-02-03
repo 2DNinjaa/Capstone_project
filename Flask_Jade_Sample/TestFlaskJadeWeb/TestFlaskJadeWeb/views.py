@@ -31,6 +31,8 @@ def home():
         pageName = 'anonHome.jade'
     elif userType == 'Seeker':
         pageName = 'indexJob.jade'
+    elif userType == 'Manager':
+        pageName = 'indexManager.jade'
 
     return render_template(
         pageName,
@@ -141,12 +143,13 @@ def seed():
 
     if seekerStat == 'on' and managerStat == 'on':
         typeOfUser = 'Both'
+        pageName = '#' #TODO: redirect for user type BOTH
     elif seekerStat == 'on':
         typeOfUser = 'Seeker'
         pageName = 'indexJob.jade'
     elif managerStat == 'on':
         typeOfUser = 'Manager'
-        pageName = '#'
+        pageName = 'indexManager.jade'
 
     # store values for the session
     # similar to cookies but does not persist - will be deleted when the session ends
