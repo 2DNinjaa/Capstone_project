@@ -2,6 +2,7 @@
 #Group 1
 import webbrowser
 import requests
+import flask
 import sqlite3
 class data:
 
@@ -35,6 +36,21 @@ class data:
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
+
+
+    def sender(self):
+        'send data to database'
+        name="Bob the builder"
+        password="can we do it?"
+        user="Both"
+
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        insert_query= "INSERT INTO USERS(UserName, Password,UserType) VALUES(?,?,?)"
+        cursor.execute(insert_query,(name,password,user))
+        conn.commit()
+        cursor.close()
+        return
         
 
     
@@ -55,9 +71,7 @@ class data:
         print(self.edu)
         #return sender
         
-    def sender(self):
-        'send data to front end'
-        return
+    
 
     
     def allocation(self):
