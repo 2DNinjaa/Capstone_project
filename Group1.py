@@ -2,7 +2,8 @@
 #Group 1
 import webbrowser
 import requests
-
+import flask
+import sqlite3
 class data:
 
     def __init__(self):
@@ -25,6 +26,17 @@ class data:
 
     def __repr__(self):
         return self.exp
+
+
+    def db(self):
+
+        conn = sqlite3.connect("C:/Users/Ninja/Documents/Capstone_project/Flask_Jade_Sample/TestFlaskJadeWeb/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from USERS """
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        return records
+        
 
     
     
