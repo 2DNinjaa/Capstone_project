@@ -66,7 +66,7 @@ class data:
         #x=webbrowser.open('https://jobs.github.com/positions.json?description=python&location=new+york')
         r=requests.get('https://jobs.github.com/positions.json?description=python&location=new+york')
         p=r.json()
-        self.company=p[0]['company'][8:]#simulating so change to proper keys later
+        self.company=p[0]['company'][:]#simulating so change to proper keys later
         print(self.company)
         return p[0]['company'].keys
 
