@@ -7,7 +7,7 @@ import sqlite3
 class data:
 
     def __init__(self):
-
+        #create table if not exists Jobs (jobTitle text, passWord text, userType text)
         #info given by user
         self.location="none"
         self.jobType="no type"
@@ -22,6 +22,7 @@ class data:
         self.jobDist=[]
         self.jobLocation="none"
         self.company="none"
+        self.listing=[]
         
 
     def __repr__(self):
@@ -32,13 +33,16 @@ class data:
 
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
+        #table_query = "create table if not exists Jobs (self.jobLocation,self.company,self,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
+        #cursor.execute(table_query)
+        #conn.commit()
         select_query = """select * from USERS """
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
 
-
     def sender(self):
+                
         'send data to database'
         name="Bob the builder"
         password="can we do it?"
@@ -67,12 +71,8 @@ class data:
         self.skills=info[2]
         self.exp=info[3]
         self.edu=info[4]
-
         print(self.edu)
         #return sender
-        
-    
-
     
     def allocation(self):
     
@@ -80,7 +80,34 @@ class data:
         r=requests.get('https://jobs.github.com/positions.json?description=python&location=new+york')
         p=r.json()
         self.company=p[0]['company'][:]#simulating so change to proper keys later
-        print(self.company)
-        return p[0]['company'].keys
+        self.jobLocation=p[0]['location'][:]
+        time=p[0]["created_at"]
+        url=p[0]["url"]
+        jobType=p[0]["type"]
+        jobTitle=p[0]["title"]
+        jobDes=p[0]["description"]
+        app=p[0]["how_to_apply"]
+
+        #conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        #cursor = conn.cursor()
+        #insert_query= "INSERT INTO Job(self.jobLocation,self.company,self,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
+        #cursor.execute(insert_query,(self.company))
+        #conn.commit()
+        #cursor.close()
+        
+        self.listing.append(self.company)
+        self.listing.append(self.jobLocation)
+        self.listing.append(time)
+        self.listing.append(url)
+        self.listing.append(jobType)
+        self.listing.append(jobTitle)
+        self.listing.append(jobDes)
+        self.listing.append(app)
+
+
+    def jerb(self):
+        return self.listing
+        
+        
 
     
