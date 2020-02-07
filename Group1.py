@@ -33,15 +33,12 @@ class data:
 
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        #table_query = "create table if not exists Jobs (self.jobLocation,self.company,self,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
-        #cursor.execute(table_query)
-        #conn.commit()
         select_query = """select * from USERS """
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
 
-    def sender(self):
+    def userSender(self):#send user info to database
                 
         'send data to database'
         name="Bob the builder"
@@ -54,6 +51,17 @@ class data:
         cursor.execute(insert_query,(name,password,user))
         conn.commit()
         cursor.close()
+        return
+
+
+    def jobSender(jobLocation,company,time,url,jobType,jobTitle,jobDes,app):#send job info to database
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        table_query = "create table if not exists Jobs (jobLocation,company,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
+        cursor.execute(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
+        conn.commit()
+        cursor.close()
+        
         return
         
 
@@ -79,8 +87,8 @@ class data:
         #x=webbrowser.open('https://jobs.github.com/positions.json?description=python&location=new+york')
         r=requests.get('https://jobs.github.com/positions.json?description=python&location=new+york')
         p=r.json()
-        self.company=p[0]['company'][:]#simulating so change to proper keys later
-        self.jobLocation=p[0]['location'][:]
+        company=p[0]['company'][:]#simulating so change to proper keys later
+        jobLocation=p[0]['location'][:]
         time=p[0]["created_at"]
         url=p[0]["url"]
         jobType=p[0]["type"]
@@ -88,12 +96,6 @@ class data:
         jobDes=p[0]["description"]
         app=p[0]["how_to_apply"]
 
-        #conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
-        #cursor = conn.cursor()
-        #insert_query= "INSERT INTO Job(self.jobLocation,self.company,self,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
-        #cursor.execute(insert_query,(self.company))
-        #conn.commit()
-        #cursor.close()
         
         self.listing.append(self.company)
         self.listing.append(self.jobLocation)
