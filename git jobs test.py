@@ -1,16 +1,27 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[1]:
+
+
 import requests
 import json
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+
+
+# In[24]:
+
 
 source = requests.get('https://jobs.github.com/positions').text
 soup = BeautifulSoup(source, 'lxml')
 summary = ""
 
 #--> prints out all job titles, locations, company, and fulltime or not full time
+
+
+# In[3]:
+
 
 #summary = soup.find('div', class_='column main').text (does same thing)
 
@@ -23,6 +34,9 @@ def positionList():
         summary = soup.find('table', class_='positionlist')
 
 
+# In[4]:
+
+
 #prints the location of each job
 #print(soup.find_all('span', class_='location'))
 
@@ -31,6 +45,9 @@ def getLocations():
     for loc in soup.find_all('span', class_='location'):
         locations.append(loc.text)
     print(locations)
+
+
+# In[5]:
 
 
 #prints the time the job was posted
@@ -42,6 +59,10 @@ def getTimes():
         timePosted.append(time.text)
     print(timePosted)
 
+
+# In[6]:
+
+
 #prints the company name
 #print(soup.find_all('a', class_='company'))
 
@@ -50,6 +71,9 @@ def getCompany():
     for co in soup.find_all('a', class_='company'):
         allCompany.append(co.text)
     print(allCompany)
+
+
+# In[7]:
 
 
 #prints all the job titles
@@ -70,6 +94,8 @@ def getTitles():
     print(jobTitles)
 
 
+# In[8]:
+
 
 #prints full time or contract work
 #class names vary
@@ -77,28 +103,61 @@ def getWork():
     print(soup.find_all('strong', class_='fulltime'))
     print(soup.find_all('strong', class_='contract'))
 
+
+# In[31]:
+
+
 # returns a list which contains sublists for each job entry
 jobs = []
 links = []
 
 def getJobsFormatted():
     for job in soup.find_all('tr', {'class':'job'} ):
-        links.append(job)
-
-    #print(links)
-    for lnk in links:
-        #print(lnk.text.strip().split('\n'))
-        tmp = lnk.text.strip().split('\n')
-        #print(tmp)
+        tmp = job.text.strip().split('\n')
         jb = []
         for x in tmp:
             y = x.strip()
             if len(y) > 1 and not "\t" in y:
                 jb.append(x.strip())
-        jobs.append(jb)
-        #print(jb)
-        #break
+        jobs.append(jb)        
     print(jobs)
+
+
+# In[111]:
+
+
+# helper function for getJobWLnks
+# assumes url is a job page on the github jobs api
+# returns the link where the user can apply to the company
+# or this page (as specified by url) if none provided
+def getLink(url):
+    newSrc = requests.get(url).text
+    newSoup = BeautifulSoup(newSrc, 'lxml')
+    jobLink = newSoup.find('div', {'class':'highlighted'}).find('a')
+    return url if jobLink == None else jobLink['href']
+
+
+# In[112]:
+
+
+jobsWL = []
+
+# similar to getJobsFormatted
+# however it also includes a link where the user can apply to the company
+def getJobWLnks():
+    for job in soup.find_all('tr', {'class':'job'} ):
+        link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href'])
+        tmp = job.text.strip().split('\n')
+        jb = []
+        for x in tmp:
+            y = x.strip()
+            if len(y) > 1 and not "\t" in y:
+                jb.append(x.strip())
+        jb.append(link)
+        jobsWL.append(jb) 
+        
+getJobWLnks()
+print(jobsWL)
 
 
 # In[ ]:
