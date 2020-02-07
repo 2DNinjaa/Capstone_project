@@ -54,11 +54,11 @@ class data:
         return
 
 
-    def jobSender(jobLocation,company,time,url,jobType,jobTitle,jobDes,app):#send job info to database
+    def jobSender(self,jobLocation,company,time,url,jobType,jobTitle,jobDes,app):#send job info to database
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        table_query = "create table if not exists Jobs (jobLocation,company,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
-        cursor.execute(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
+        table_query = "create table if not exists Jobs (jobLocation text,company text,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
+        cursor.execute(insert_query,(jobLocation,company,time,url,jobType,jobTitle,jobDes,app))
         conn.commit()
         cursor.close()
         
@@ -105,6 +105,7 @@ class data:
         self.listing.append(jobTitle)
         self.listing.append(jobDes)
         self.listing.append(app)
+        return self.jobSender(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
 
 
     def jerb(self):
