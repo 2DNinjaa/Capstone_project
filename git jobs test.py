@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 
-# In[24]:
+# In[18]:
 
 
 source = requests.get('https://jobs.github.com/positions').text
@@ -123,7 +123,7 @@ def getJobsFormatted():
     print(jobs)
 
 
-# In[111]:
+# In[4]:
 
 
 # helper function for getJobWLnks
@@ -137,7 +137,7 @@ def getLink(url):
     return url if jobLink == None else jobLink['href']
 
 
-# In[112]:
+# In[19]:
 
 
 jobsWL = []
@@ -156,8 +156,82 @@ def getJobWLnks():
         jb.append(link)
         jobsWL.append(jb) 
         
-getJobWLnks()
-print(jobsWL)
+#getJobWLnks()
+#print(jobsWL)
+
+
+# In[21]:
+
+
+#getJobWLnks()
+#print(jobsWL)
+
+
+# In[14]:
+
+
+multPageJobsWL = []
+
+# includes links and searches multiple pages
+def getJobLP(numPages):
+    for i in range (1, numPages):
+        url = 'https://jobs.github.com/positions'
+        finalurl = url + 'page=' + str(i)
+        source = requests.get(url).text
+        soup = BeautifulSoup(source, 'lxml')
+        
+        for job in soup.find_all('tr', {'class':'job'} ):
+            link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href'])
+            tmp = job.text.strip().split('\n')
+            jb = []
+            for x in tmp:
+                y = x.strip()
+                if len(y) > 1 and not "\t" in y:
+                    jb.append(x.strip())
+            jb.append(link)
+            multPageJobsWL.append(jb) 
+
+
+# In[16]:
+
+
+#getJobLP(2)
+#print(multPageJobsWL)
+
+
+# In[2]:
+
+
+multPageLocJobsWL = []
+
+# searches multiple pages and the given location
+# also returns links
+def getJobLLP(loc, numPages):
+    for i in range (1, numPages):
+        loc = loc.replace(' ', '+')
+        url = 'https://jobs.github.com/positions' + '?page=' + str(i)
+        #resolvedURL = url + "?page=" + str(i)
+        finalURL = url + '&location='+ loc
+        source = requests.get(finalURL).text
+        soup = BeautifulSoup(source, 'lxml')
+        
+        for job in soup.find_all('tr', {'class':'job'} ):
+            link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href'])
+            tmp = job.text.strip().split('\n')
+            jb = []
+            for x in tmp:
+                y = x.strip()
+                if len(y) > 1 and not "\t" in y:
+                    jb.append(x.strip())
+            jb.append(link)
+            multPageLocJobsWL.append(jb) 
+
+
+# In[5]:
+
+
+#getJobLLP('chicago', 3)
+#print(multPageLocJobsWL)
 
 
 # In[ ]:
