@@ -87,6 +87,7 @@ class data:
         #x=webbrowser.open('https://jobs.github.com/positions.json?description=python&location=new+york')
         r=requests.get('https://jobs.github.com/positions.json?description=python&location=new+york')
         p=r.json()
+        return type(p)
         done=False
         j=0
         temp=[]
@@ -120,10 +121,10 @@ class data:
             self.listing.append(jobDes)
             self.listing.append(app)
             temp.append(self.listing)
-        return self.check(temp)
+        #return self.check(temp)
         
         #jobSender
-        #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
+        return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
 
 
     def jerb(self):
@@ -151,7 +152,7 @@ class data:
         insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                             jobType, jobTitle, jobDes, jobApp) 
                                 VALUES (?,?,?,?,?,?,?,?)"""
-        data_tuples = (jobLocation,company, datePosted, postUrl, jobType, jobTitle, jobDes, jobApp)
+        data_tuples = (jobLocation,company, time, url, jobType, jobTitle, jobDes, app)
         cursor.execute(insert_query, data_tuples)
         conn.commit()
 
@@ -160,4 +161,11 @@ class data:
         return tmp
         
 
-    
+    def tables(self):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from Jobs """
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        return len(records)
+        
