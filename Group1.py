@@ -57,7 +57,7 @@ class data:
     def jobSender(self,jobLocation,company,time,url,jobType,jobTitle,jobDes,app):#send job info to database
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        table_query = "create table if not exists Jobs (jobLocation text,company text,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
+        insert_query = "create table if not exists Jobs (jobLocation text,company text,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
         cursor.execute(insert_query,(jobLocation,company,time,url,jobType,jobTitle,jobDes,app))
         conn.commit()
         cursor.close()
@@ -105,11 +105,32 @@ class data:
         self.listing.append(jobTitle)
         self.listing.append(jobDes)
         self.listing.append(app)
-        return self.jobSender(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
+        #jobSender
+        return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
 
 
     def jerb(self):
         return self.listing
+
+
+
+    def testing(self,jobLocation,company,time,url,jobType,jobTitle,jobDes,app):
+        print("I")
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        print("I")
+        cursor = conn.cursor()
+        table_query = """create table if not exists JOBS
+                            (location text, company text, datePosted text, postUrl text, 
+                            jobType text, jobTitle text, jobDes text, jobApp text)"""
+        cursor.execute(table_query)
+        conn.commit()
+        
+        insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
+                                            jobType, jobTitle, jobDes, jobApp) 
+                                VALUES (?,?,?,?,?,?,?,?)"""
+        data_tuples = (jobLocation,company, datePosted, postUrl, jobType, jobTitle, jobDes, jobApp)
+        cursor.execute(insert_query, data_tuples)
+        conn.commit()
         
         
 
