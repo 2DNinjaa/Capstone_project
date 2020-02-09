@@ -87,30 +87,53 @@ class data:
         #x=webbrowser.open('https://jobs.github.com/positions.json?description=python&location=new+york')
         r=requests.get('https://jobs.github.com/positions.json?description=python&location=new+york')
         p=r.json()
-        company=p[0]['company'][:]#simulating so change to proper keys later
-        jobLocation=p[0]['location'][:]
-        time=p[0]["created_at"]
-        url=p[0]["url"]
-        jobType=p[0]["type"]
-        jobTitle=p[0]["title"]
-        jobDes=p[0]["description"]
-        app=p[0]["how_to_apply"]
-
+        done=False
+        j=0
+        temp=[]
+        for i in range(len(p)):
+            
+            company=p[i]['company'][:]
+            jobLocation=p[i]['location'][:]
+            
+            time=p[i]["created_at"][4:11]+p[i]["created_at"][24:28]
+            
+            url=p[i]["url"]
+            
+            jobType=p[i]["type"]
+            
+            jobTitle=p[i]["title"]
+            
+            jobDes=p[i]["description"]
+            jobDes.replace("<li>","")
+            jobDes.replace("</li>","")
+            jobDes.replace("<p>","")
+            jobDes.replace("</p>","")
+            app=p[i]["how_to_apply"]
         
-        self.listing.append(self.company)
-        self.listing.append(self.jobLocation)
-        self.listing.append(time)
-        self.listing.append(url)
-        self.listing.append(jobType)
-        self.listing.append(jobTitle)
-        self.listing.append(jobDes)
-        self.listing.append(app)
+        
+            self.listing.append(self.company)
+            self.listing.append(self.jobLocation)
+            self.listing.append(time)
+            self.listing.append(url)
+            self.listing.append(jobType)
+            self.listing.append(jobTitle)
+            self.listing.append(jobDes)
+            self.listing.append(app)
+            temp.append(self.listing)
+        return self.check(temp)
+        
         #jobSender
-        return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
+        #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
 
 
     def jerb(self):
-        return self.listing
+        r=requests.get('https://jobs.github.com/positions.json?location=chicago')
+        p=r.json()
+        print(p)
+        print(p[0]['company'])
+        return p[1]['company']
+    
+        #return self.listing
 
 
 
@@ -131,7 +154,10 @@ class data:
         data_tuples = (jobLocation,company, datePosted, postUrl, jobType, jobTitle, jobDes, jobApp)
         cursor.execute(insert_query, data_tuples)
         conn.commit()
-        
+
+
+    def check(self,tmp):
+        return tmp
         
 
     
