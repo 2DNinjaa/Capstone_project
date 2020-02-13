@@ -1,0 +1,62 @@
+/* Style the search box inside the navigation bar */
+.navSearch {
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
+.frogNav {
+    background-color: #85BAA1;
+    border-color: #85BAA1 !important;
+    color: white !important;
+}
+
+    .frogNav a {
+        color: white!important;
+    }
+
+.rightFloat {
+    float:right;
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+    width: 90%;
+    background-color: #303036;
+    overflow: hidden;
+}
+
+.topnav label {
+    font-weight: bold;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a, label {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active, label.active {
+    background-color: #337357;
+    color: white;
+}
+
+.navBrand {
+    background-color: #337357;
+    color: white !important;
+    margin: 0px !important;
+}

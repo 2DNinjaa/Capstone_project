@@ -1,0 +1,160 @@
+/* Style the search box inside the navigation bar */
+/*.BodyContent input[type=text] {
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}*/
+
+/* Add a black background color to the top navigation */
+.BodyContent {
+    width: 90%;
+    overflow: hidden;
+}
+
+.BodyContent h2 {
+    text-align: center;
+}
+
+.inline {
+    /*margin-left: 45%;*/
+    text-align: center;
+}
+
+.inline h2, h4, a {
+    display: inline;
+}
+
+form label {
+    color: black;
+    padding: 0px;
+    float: unset;
+}
+
+.center {
+    width: 100%;
+    margin: auto;
+}
+
+.frogGreen span {
+    color: white!important;
+}
+
+.frogGreen {
+    background-color: #85BAA1;
+    border-color: #85BAA1 !important;
+    color: white!important;
+}
+
+.frogGreen:hover {
+    background-color: #6D9984!important;
+    border-color: #85BAA1 !important;
+}
+
+.frogGreenBorder {
+    padding: 3px;
+    border: 2px solid #85BAA1;
+    border-radius: 5px;
+}
+
+.frogGreenDarkBorder {
+    padding: 3px;
+    border: 2px solid #6D9984!important;
+    border-radius: 5px;
+    background-color: white!important;
+}
+
+/* styling checkboxes */
+.input-title {
+    clear: both;
+    padding: 22px 0px 0px 0px;
+    font-size: 16px;
+    color: rgba(255,255,255,.6);
+    font-weight: 300;
+}
+
+.checkbox-label {
+    display: block;
+    position: relative;
+    margin: auto;
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 24px;
+    height: 24px;
+    width: 24px;
+    clear: both;
+}
+
+    .checkbox-label input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .checkbox-label .checkbox-custom {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 24px;
+        width: 24px;
+        background-color: transparent;
+        border-radius: 5px;
+        transition: all 0.3s ease-out;
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        border: 2px solid #85BAA1;
+    }
+
+
+    .checkbox-label input:checked ~ .checkbox-custom {
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        -webkit-transform: rotate(0deg) scale(1);
+        -ms-transform: rotate(0deg) scale(1);
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+        border: 2px solid #85BAA1;
+    }
+
+
+    .checkbox-label .checkbox-custom::after {
+        position: absolute;
+        content: "";
+        left: 12px;
+        top: 12px;
+        height: 0px;
+        width: 0px;
+        border-radius: 5px;
+        border: solid #009BFF;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(0deg) scale(0);
+        -ms-transform: rotate(0deg) scale(0);
+        transform: rotate(0deg) scale(0);
+        opacity: 1;
+        transition: all 0.3s ease-out;
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+    }
+
+
+    .checkbox-label input:checked ~ .checkbox-custom::after {
+        -webkit-transform: rotate(45deg) scale(1);
+        -ms-transform: rotate(45deg) scale(1);
+        transform: rotate(45deg) scale(1);
+        opacity: 1;
+        left: 8px;
+        top: 3px;
+        width: 6px;
+        height: 12px;
+        border: solid #85BAA1;
+        border-width: 0 2px 2px 0;
+        background-color: transparent;
+        border-radius: 0;
+    }
+

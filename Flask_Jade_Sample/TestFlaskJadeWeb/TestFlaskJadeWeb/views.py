@@ -34,11 +34,12 @@ def home():
     elif userType == 'Manager':
         pageName = 'indexManager.jade'
 
+    uName = session.get('UserName', '')
     return render_template(
         pageName,
         title='Home',
+        name=uName,
         year=datetime.now().year,
-        polls=repository.get_polls(),
     )
 
 @app.route("/logout")
@@ -79,37 +80,78 @@ def about():
         repository_name=repository.name,
     )
 
+@app.route('/jobSearch') # routes from menu links
+def jobSearch():
+    return render_template(
+            'searchPageJob.jade',
+            title = 'Search',
+            quickSearch = None,
+            distance = None,
+            pay = None,
+            fTime = None,
+            pTime = None
+        )
+
+@app.route('/jobFilter', methods=['POST']) # routes from filter list update
+def jobFilter():
+    return render_template(
+            'searchPageJob.jade',
+            title = 'Search',
+            distance = request.form.get('Distance', None),
+            pay = request.form.get('Pay', None),
+            fTime = request.form.get('FullTime', None),
+            pTime = request.form.get('PartTime', None),
+            quickSearch = None
+        )
+
+@app.route('/quickSearch', methods=['POST']) # routes from the quick search
+def quickSearch():
+    return render_template(
+            'searchPageJob.jade',
+            title = 'Search',
+            quickSearch = request.form.get('QuickSearch', None),
+            distance = None,
+            pay = None,
+            fTime = None,
+            pTime = None
+        )
+
 @app.route('/seed', methods=['POST'])
 def seed():
     conn = sqlite3.connect('Users.db')
     cursor = conn.cursor()
 
     registerStat = request.form.get('Register', None)
-    if registerStat == None:
-        #login, determine usertype, and route page
-
+    if registerStat == None: # login, determine usertype, and route page
         #get form values, search table, return results
-        returningUserType = "Anon"
         select_query = """select * from USERS where userName = ?"""
         cursor.execute(select_query, (request.form['UserName'],))
         records = cursor.fetchall()
-        for row in records:
-            if row[1] == request.form['PassWord']:
-                returningUserType = row[2]
-                session['UserName'] = row[0]
-                session['UserType'] = row[2]
-
-        if returningUserType == "Anon": # if no matching user was found
+        
+        # check if none or multiple rows were returned
+        # assumed name was incorrect
+        if len(records) != 1:
+            print("ERROR: Invalid user credentials")
+            return redirect('/')
+        
+        # password matching with the value stored in the db
+        # if match set session data otherwise incorrect password was supplied in login
+        if records[0][1] == request.form['PassWord']:
+            session['UserName'] = records[0][0]
+            session['UserType'] = records[0][2]
+        else:
             print("LOGIN ERROR: No such user found, incorrect credentials")
-            return redirect("/")
+            return redirect('/')
 
+        # page routing
         pageName = ""
-        if (returningUserType == "Seeker"):
+        if (session['UserType'] == "Seeker"):
             pageName = 'indexJob.jade'
-        elif (returningUserType == "Manager"):
+        elif (session['UserType'] == "Manager"):
             pageName = '#'
         
-        return render_template(pageName) # redirect to home page, depends on user type
+        # load page
+        return render_template(pageName, title='Home', name=session['UserName']) # redirect to home page, depends on user type
     
     #table_query = "drop table USERS"
     #cursor.execute(table_query)
@@ -164,7 +206,7 @@ def seed():
     cursor.close()
 
     # redirects to home page
-    return render_template(pageName) 
+    return render_template(pageName, title='Home', name=session['UserName']) 
 
 @app.route('/results/<key>')
 def results(key):
