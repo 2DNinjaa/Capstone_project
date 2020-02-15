@@ -8,16 +8,6 @@
     font-size: 17px;
 }
 
-.frogNav {
-    background-color: #85BAA1;
-    border-color: #85BAA1 !important;
-    color: white !important;
-}
-
-    .frogNav a {
-        color: white!important;
-    }
-
 .rightFloat {
     float:right;
 }

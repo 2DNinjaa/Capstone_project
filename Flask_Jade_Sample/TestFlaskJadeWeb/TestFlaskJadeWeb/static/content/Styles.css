@@ -66,6 +66,26 @@ form label {
     background-color: white!important;
 }
 
+.frogNav {
+    background-color: #85BAA1;
+    border-color: #85BAA1 !important;
+    color: white !important;
+}
+
+    .frogNav a {
+        color: white !important;
+    }
+
+/* job post template */
+.jobPost {
+    
+}
+
+    .jobPost:hover {
+        border: 2px solid #6D9984 !important;
+        padding: 1%;
+    }
+
 /* styling checkboxes */
 .input-title {
     clear: both;

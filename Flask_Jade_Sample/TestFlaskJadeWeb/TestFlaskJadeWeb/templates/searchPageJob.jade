@@ -4,6 +4,32 @@ block content
 	h2 Search for Jobs
 	form(action='/jobFilter', method='post')
 		input.frogGreenBorder(name='jobFullSearch', placeholder='Search...')
+	hr
+	br
+
+	.container
+		.row
+			.col
+				//h1.display-4.mb-3 Infinite load
+				#scroller.mb-3
+					// template for each job post
+					template#post_template
+						.card.mb-3.animated.fadeIn.shadow-sm
+							a#postLink(href='/')
+								.card-body.jobPost
+									h4#title.card-title
+									h4#company.text-muted
+									br
+									span#location.text-muted
+									span#pay.text-muted
+							hr
+							br
+				// triggers the refresh
+				#sentinel.d-flex.justify-content-center.mb-3
+					.spinner-border(role='status')
+					
+	// associated js for the infinite scrolling
+	script(src='/static/scripts/script.js')
 
 	div.sidenav.frogNav
 		label Filters
