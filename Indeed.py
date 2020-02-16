@@ -3,6 +3,7 @@ import json
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
+#Currently NOT supporting multiple pages or creating master dictionary
 
 def getTitles():
     pnames = []
@@ -85,18 +86,51 @@ def getLinks():
 
 
 
-#returns some headers (not sure how to fix)
+
 def getFullDesc(link):
     #descs = []
     source = requests.get(link).text
     soup = BeautifulSoup(source, 'lxml')
-    desc = soup.find('div', class_='jobsearch-jobDescriptionText').findAll('p')
+    desc = soup.find('div', class_='jobsearch-jobDescriptionText')
+    desc = desc.text
     return  (desc)
 
 
+def getSkills(link):
+    skillset = []
+    skills = ['python', 'java', 'c++', 'sql', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end', 'html', 'css','json', 'xml','api', 'linux', 'nodejs', 'c#', 'spark', 'sas', 'matlab', 'excel', 'spark', 'hadoop', 'azure', 'spss', 'git']
+    desc = getFullDesc(link).lower().split()
+    for i in desc:
+        if i in skills and i not in skillset:
+            skillset.append(i)
+
+    return (skillset)
 
 
-#need getSkills, getCategory, Create()
+#can change to return as a list
+def getCategory(link):
+    aiKeys = ['ai', 'a.i.', 'artificial intelligence', 'artificial']
+    dlKeys= ['deep learning', 'neural networks', 'big data', 'deep', 'statistics']
+    mlKeys = ['data mining', 'machine learning', 'cnn', 'rbm', 'machine', 'natural language', 'regression', 'fault diagnosis', 'intrusion detection']
+    seKeys = ['software engineer', 'software development','code']
+
+    sumList = getFullDesc(link).lower().split()
+
+    for i in sumList:
+        if i in aiKeys:
+            return ('Artificial Intelligence')
+    for i in sumList:
+        if i in dlKeys:
+            return ('Deep Learning')
+    for i in sumList:
+        if i in mlKeys:
+            return ('Machine Learning')
+    for i in sumList:
+        if i in seKeys:
+            return ('Software Engineer')
+
+    return ('Other')
+
 
 
 
