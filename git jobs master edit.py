@@ -201,10 +201,16 @@ def getJobLLP(loc, numPages):
         url = 'https://jobs.github.com/positions' + '?page=' + str(i)
         #resolvedURL = url + "?page=" + str(i)
         finalURL = url + '&location='+ loc # including location in filters
+
+        #r=requests.get(finalURL)
+        #p=r.json()
+        
         source = requests.get(finalURL).text
         soup = BeautifulSoup(source, 'lxml')
         
         for job in soup.find_all('tr', {'class':'job'} ): # iterating over individual job data
+            
+            
             #link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href']) # get apply to link
             tmp = job.text.strip().split('\n')
             jb = {}
@@ -270,6 +276,7 @@ def makeDict(x):
 #going to be a list of dictionaries ***TBA
 #for now prints out several dictionaries for each job post on the page (50)
 def create(loc = 'chicago', numPages = 1):
+    
     print (getJobLLP (loc, numPages))
     
     #source = requests.get('https://jobs.github.com/positions').text

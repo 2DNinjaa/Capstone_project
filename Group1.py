@@ -14,6 +14,8 @@ class data:
         self.skills=[]
         self.exp="none"
         self.edu="none"
+
+        self.cnt=1
         
 
         #info given by api
@@ -29,11 +31,13 @@ class data:
         return self.exp
 
 
+
+    #Function to just view the users table
     def db(self):
 
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        select_query = """select * from USERS """
+        select_query = """select * from JOBS """
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
@@ -82,63 +86,44 @@ class data:
         print(self.edu)
         #return sender
     
-    def allocation(self):
+    def allocation(self,link):#gather job info 
     
-        #x=webbrowser.open('https://jobs.github.com/positions.json?description=python&location=new+york')
-        r=requests.get('https://jobs.github.com/positions.json?description=python&location=new+york')
+        r=requests.get(link)
         p=r.json()
-        done=False
-        j=0
         temp=[]
+        if p==[]:
+            return self.listing
         for i in range(len(p)):
-            
             company=p[i]['company'][:]
             jobLocation=p[i]['location'][:]
-            
-            time=p[i]["created_at"][4:11]+p[i]["created_at"][24:28]
-            
-            url=p[i]["url"]
-            
             jobType=p[i]["type"]
-            
             jobTitle=p[i]["title"]
+            time=p[i]["created_at"][4:11]+p[i]["created_at"][24:28]
+            temp.append(company)
+            temp.append(jobLocation)
+            temp.append(jobType)
+            temp.append(jobTitle)
+            temp.append(time)
             
-            jobDes=p[i]["description"]
-            jobDes.replace("<li>","")
-            jobDes.replace("</li>","")
-            jobDes.replace("<p>","")
-            jobDes.replace("</p>","")
-            app=p[i]["how_to_apply"]
-        
-        
-            self.listing.append(self.company)
-            self.listing.append(self.jobLocation)
-            self.listing.append(time)
-            self.listing.append(url)
-            self.listing.append(jobType)
-            self.listing.append(jobTitle)
-            self.listing.append(jobDes)
-            self.listing.append(app)
-            temp.append(self.listing)
-        return self.check(temp)
-        
-        #jobSender
+        if self.cnt>=10 and self.cnt<100:
+            self.cnt+=1
+            self.listing.append(temp)
+            link=link.replace(link[-2:],cnt)
+            return self.allocation(link)
+        else:
+            print("entered into else" +str(self.cnt))
+            self.cnt+=1
+            self.listing.append(temp)
+            link=link.replace(link[-1],str(self.cnt))
+            return self.allocation(link)   
         #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
 
 
-    def jerb(self):
-        r=requests.get('https://jobs.github.com/positions.json?location=chicago')
-        p=r.json()
-        print(p)
-        print(p[0]['company'])
-        return p[1]['company']
-    
-        #return self.listing
 
-
-
-    def testing(self,jobLocation,company,time,url,jobType,jobTitle,jobDes,app):
-        print("I")
+    def testing(self):#sends the data allocated to the database
+        
+        self.allocation("https://jobs.github.com/positions.json?page=1")
+        
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         print("I")
         cursor = conn.cursor()
@@ -147,17 +132,20 @@ class data:
                             jobType text, jobTitle text, jobDes text, jobApp text)"""
         cursor.execute(table_query)
         conn.commit()
-        
-        insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
-                                            jobType, jobTitle, jobDes, jobApp) 
-                                VALUES (?,?,?,?,?,?,?,?)"""
-        data_tuples = (jobLocation,company, datePosted, postUrl, jobType, jobTitle, jobDes, jobApp)
-        cursor.execute(insert_query, data_tuples)
-        conn.commit()
-
-
-    def check(self,tmp):
-        return tmp
+        for i in range(len(self.listing)):
+            insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
+                                                jobType, jobTitle, jobDes, jobApp) 
+                                    VALUES (?,?,?,?,?,?,?,?)"""
+            data_tuples = (self.listing[i][1],self.listing[i][0], self.listing[i][4],"", self.listing[i][2], self.listing[i][3], "", "")
+            cursor.execute(insert_query, data_tuples)
+            conn.commit()
         
 
-    
+    def tables(self):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from Jobs """
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        return records
+        
