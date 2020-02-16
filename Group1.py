@@ -121,7 +121,11 @@ class data:
 
 
     def testing(self):#sends the data allocated to the database
-        
+        q=1
+        w=0
+        e=4
+        r=2
+        t=3
         self.allocation("https://jobs.github.com/positions.json?page=1")
         
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
@@ -136,9 +140,15 @@ class data:
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
-            data_tuples = (self.listing[i][1],self.listing[i][0], self.listing[i][4],"", self.listing[i][2], self.listing[i][3], "", "")
+            data_tuples = (self.listing[i][q],self.listing[i][w], self.listing[i][e],"", self.listing[i][r], self.listing[i][t], "", "")
+            q+=5
+            w+=5
+            e+=5
+            r+=5
+            t+=5
             cursor.execute(insert_query, data_tuples)
-            conn.commit()
+        print("DONE")
+        conn.commit()
         
 
     def tables(self):
@@ -148,4 +158,7 @@ class data:
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
+
+    def look(self):
+        return self.listing
         
