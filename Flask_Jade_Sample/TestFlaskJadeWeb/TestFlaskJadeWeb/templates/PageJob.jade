@@ -1,0 +1,39 @@
+doctype
+html
+	head
+		meta(charset='utf-8')
+		
+		title #{title} - Job Hopper
+
+		link(rel='stylesheet', type='text/css', href='/static/content/Styles.css')
+		link(rel='stylesheet', type='text/css', href='/static/content/StylesSidebar.css')
+
+	body
+		.BodyContent
+			.inline
+				h2 #{jobTitle}
+				a(href='#') Bookmark
+				br
+				br
+				h4 #{jobCompany}
+				| , 
+				h4 #{jobLoc}
+				| , 
+				h4 PAY
+				br
+				br
+				a(href='#')
+					| Apply at 
+					span COMPANY NAME
+			br
+			hr
+			br
+			h3 Description
+			p #{jobDesc}
+		.sidenav.frogNav
+			a.frogGreen(href='#') Home
+			a.frogGreen(href='#') Search
+			a.frogGreen(href='#') Graph
+			a.frogGreen(href='#') Bookmarks
+		.footer
+			h3 Related Jobs

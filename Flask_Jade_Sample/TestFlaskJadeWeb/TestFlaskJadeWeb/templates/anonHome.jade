@@ -1,33 +1,36 @@
 extends layoutAnon
 
 block content
-  h2 Login
-  br
-  form(action='/seed', method='post')
-    input(
-      type='text'
-      id='userName'
-      name='UserName'
-      placeholder='User Name'
-    ) 
+	div.BodyContent(style='width:100%;')
+		h2 Login or Register
+		br
+		form(action='/seed', method='post')
+			div(style='display:grid; width: 50%; margin: auto;')
+				label Username: 
+				input.center.frogGreenBorder(type='text', placeholder='Username', name='UserName')
+			
+			br
+			div(style='display:grid; width: 50%; margin: auto;')
+				label Password: 
+				input.center.frogGreenBorder(type='password', placeholder='Password', name='PassWord')
 
-    input(
-     type='password'
-     id='passWord'
-     name='PassWord'
-     placeholder='Password'
-	)
-
-    div 
-      span Job Seeker
-      input(type='checkbox', name='Seeker')
-
-    div 
-      span Manager
-      input(type='checkbox', name='Manager')
-
-    br
-    button.btn.btn-primary(type='submit') Sign in
-    div 
-      span Register
-      input(type='checkbox', name='Register')
+			br
+			div(style='display:flex; width: 50%; margin: auto;')
+				label(style='margin:0% 2%;')
+					| New User? Then select your role: 
+					br
+					| (Check all that apply)
+				label(style='padding:0% 2%;')
+					label Applicant
+					label.checkbox-label
+						input(type="checkbox", name='Seeker')
+						span.checkbox-custom.rectangular
+				label(style='padding:0% 2%;')
+					label Manager
+					label.checkbox-label
+						input(type="checkbox", name='Manager')
+						span.checkbox-custom.rectangular
+			br
+			div(style='display:flex; width: 50%; margin: auto;')
+				button.btn.btn-primary.center.frogGreen(style='margin:0% 1%;', type='submit', name='Login', value='L') Log In
+				button.btn.btn-primary.center.frogGreen(style='margin:0% 1%;', type='submit', name='Reg', value='R') Register

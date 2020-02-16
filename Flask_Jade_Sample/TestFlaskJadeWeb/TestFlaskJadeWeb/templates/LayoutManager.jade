@@ -1,38 +1,41 @@
 doctype html
 html
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    title #{title} - Post Jobs
-    link(rel='stylesheet', type='text/css', href='/static/content/bootstrap.min.css')
-    link(rel='stylesheet', type='text/css', href='/static/content/site.css')
-    script(src='/static/scripts/modernizr-2.6.2.js')
-  body
-    .navbar.navbar-inverse.navbar-fixed-top
-      .container
-        .navbar-header
-          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand(href='/') Post Jobs
-        .navbar-collapse.collapse
-          ul.nav.navbar-nav
-            li
-              a(href='/') Home
-            li
-              a(href='/post') Post
-            li
-              a(href='/tmpGraph') Graph
-            li
-              a(href='/about') About
-            li
-              a(href='/logout') Logout
-    .container.body-content
-      block content
-      hr
-      footer
-        p &copy; #{year} - Find CS Jobs
+    head
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        title #{title} - Job Hopper
+        link(rel='stylesheet', type='text/css', href='/static/content/bootstrap.min.css')
+        link(rel='stylesheet', type='text/css', href='/static/content/site.css')
+
+        link(rel='stylesheet', type='text/css', href='/static/content/Styles.css')
+        link(rel='stylesheet', type='text/css', href='/static/content/StylesNavbar.css')
+        link(rel='stylesheet', type='text/css', href='/static/content/StylesSidebar.css')
+
+        script(src='/static/scripts/modernizr-2.6.2.js')
+    body
+        .navbar.navbar-inverse.navbar-fixed-top.frogNav
+            .container
+                .navbar-header
+                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand.frogGreen(href='/') Home
+                .navbar-collapse.collapse
+                    ul.nav.navbar-nav
+                        li
+                            a.frogGreen(href='/post') Post
+                        li
+                            a.frogGreen(href='/tmpGraph') Graph
+                        li
+                            a.frogGreen(href='/about') About
+                        li
+                            a.frogGreen(href='/logout') Logout
+        .container.body-content
+            block content
+            hr
+            footer
+                p &copy; #{year} - Find CS Jobs
 
     script(src='/static/scripts/jquery-1.10.2.js')
     script(src='/static/scripts/bootstrap.js')

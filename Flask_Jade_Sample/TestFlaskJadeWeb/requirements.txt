@@ -1,4 +1,3 @@
 Flask==1.1.1
 pyjade<5
 azure-storage<1
-pymongo<3
