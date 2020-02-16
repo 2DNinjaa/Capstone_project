@@ -44,7 +44,7 @@ def getLocations():
 
     return(locations)
 
-
+#should work but have not seen it work on any of the ones i ran it on
 def getPay():
     source = requests.get('https://www.indeed.com/jobs?q=computer+science&l=').text
     soup = BeautifulSoup(source, 'lxml')  
@@ -60,6 +60,24 @@ def getPay():
           except:
             sal.append('N/A')
     return(sal)
+
+
+#Returns different ones each time i run it on a list of links? As if it only sometimes finds it
+def getpay2(link):
+    #pays=[]
+    pay = ''
+    source = requests.get(link).text
+    soup = BeautifulSoup(source, 'lxml')    
+    soup = soup.find('div', class_='jobsearch-jobDescriptionText')
+    test = soup.find_all('p')
+    for i in test:
+        if ('salary') in i.text.lower():
+            #pays.append(i.text)
+            pay = i.text
+    if len(pay) > 0:
+        return (pay)
+    else:
+        return ('N/A')
 
 
 
@@ -130,7 +148,6 @@ def getCategory(link):
             return ('Software Engineer')
 
     return ('Other')
-
 
 
 
