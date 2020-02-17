@@ -44,6 +44,18 @@ def getLocations():
 
     return(locations)
 
+def getDates():
+    dates=[]
+    source = requests.get('https://www.indeed.com/jobs?q=computer+science&l=').text
+    soup = BeautifulSoup(source, 'lxml')
+    spans = soup.findAll('span', attrs={'class': 'date'})
+    for span in spans:
+        dates.append(span.text)
+    return (dates)
+
+
+
+
 #should work but have not seen it work on any of the ones i ran it on
 def getPay():
     source = requests.get('https://www.indeed.com/jobs?q=computer+science&l=').text
