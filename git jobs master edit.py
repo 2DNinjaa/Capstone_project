@@ -290,22 +290,7 @@ def create(loc = 'chicago', numPages = 1):
         #soup = BeautifulSoup(source, 'lxml')
         #print (makeDict(job))
         
-    
-    
- 
-
-
-#for testing purposes
-def testsummary():
-    print('----------Positions------------')
-    positionNamesOnly()
-    print('----------Companies------------')
-    company()
-    print('----------Locations------------')
-    location()
-    print('----------Locations------------')
-    onlylinks()
-     
+   
 
 
 
