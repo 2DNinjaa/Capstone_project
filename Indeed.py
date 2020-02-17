@@ -56,40 +56,20 @@ def getDates():
 
 
 
-#should work but have not seen it work on any of the ones i ran it on
 def getPay():
     source = requests.get('https://www.indeed.com/jobs?q=computer+science&l=').text
     soup = BeautifulSoup(source, 'lxml')  
     sal = []
     for div in soup.find_all(name='div', attrs={'class':'row'}):
         try:
-            sal.append(div.find('nobr').text)
+            sal.append(div.find(name='span', attrs={'class':'salaryText'}).text.replace('\n', ''))
         except:
-          try:
-            d2 = div.find(name='div', attrs={'class':'sjcl'})
-            div3 = div2.find('div')
-            sal.append(div3.text.strip())
-          except:
-            sal.append('N/A')
+            try:
+                sal.append(div.find(name='span', attrs={'class':'sjcl'}).text.replace('\n', ''))
+            except:
+                continue
+                
     return(sal)
-
-
-#Returns different ones each time i run it on a list of links? As if it only sometimes finds it
-def getpay2(link):
-    #pays=[]
-    pay = ''
-    source = requests.get(link).text
-    soup = BeautifulSoup(source, 'lxml')    
-    soup = soup.find('div', class_='jobsearch-jobDescriptionText')
-    test = soup.find_all('p')
-    for i in test:
-        if ('salary') in i.text.lower():
-            #pays.append(i.text)
-            pay = i.text
-    if len(pay) > 0:
-        return (pay)
-    else:
-        return ('N/A')
 
 
 
