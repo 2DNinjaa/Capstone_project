@@ -164,6 +164,37 @@ def getCategory(link):
 
 
 
+def getSome(job,city,genLinks,cnt):#creates links to job listings in indeed
+    'if no location is given then make it into empty list plus this only covers cities only. There needs to be a job as a string to make this work'
+    baseLink="https://www.indeed.com/"
+    job=job.replace(" ","+")
+    position=baseLink+"jobs?q="+job
+    if city==[]:
+        position=position+"&start=00"
+        if genLinks==[]:
+            genLinks.append(position)
+        if cnt<10:
+            cnt+=1
+            link=position.replace(position[-2],str(cnt))
+            link=link[:-1]+"0"                          #this only works if it is under 10 pages
+            genLinks.append(link)
+            cnt+=1
+            getSome(job,city,genLinks,cnt)
+    else:
+        position=position+"&l="+str(city)+"&start=00"
+        if genLinks==[]:
+            genLinks.append(position)
+        if cnt<10:
+            cnt+=1
+            link=position.replace(position[-2],str(cnt))
+            link=link[:-1]+"0"                          #same for this one
+            genLinks.append(link)
+            cnt+=1
+            getSome(job,city,genLinks,cnt)
+    return genLinks
+
+    
+
 
 
 

@@ -127,7 +127,6 @@ class data:
         r=2
         t=3
         self.allocation("https://jobs.github.com/positions.json?page=1")
-        
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         print("I")
         cursor = conn.cursor()
@@ -149,6 +148,21 @@ class data:
             cursor.execute(insert_query, data_tuples)
         print("DONE")
         conn.commit()
+
+
+    def update(self):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        print("I")
+        cursor = conn.cursor()
+        addColumn = "ALTER TABLE JOBS ADD COLUMN link text"
+        addColumn = "ALTER TABLE JOBS ADD COLUMN IDNUM int"
+        
+##        UPDATE JOBS
+##        SET column_3 = "pie"
+##        WHERE
+##        search_condition 
+##        ORDER column_or_expression
+##        LIMIT row_count OFFSET offset;
         
 
     def tables(self):
