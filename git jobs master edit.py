@@ -1,17 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+
 
 
 import requests
 import json
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-
-
-# In[23]:
-
 
 ###CAN CHANGE TO RUN LINKS THROUGH METHODS (have links as method parameters)
 
