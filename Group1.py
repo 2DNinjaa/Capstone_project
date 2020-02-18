@@ -195,7 +195,7 @@ class data:
 ###CAN CHANGE TO RUN LINKS THROUGH METHODS (have links as method parameters)
 
 #prints links of positions by location (city or state)
-    def links(local):
+    def links(self,local):
         loc = local.replace(' ', '+')
         url = 'https://jobs.github.com/positions?utf8=%E2%9C%93&description=&location=' + loc
         source = requests.get(url).text
@@ -224,7 +224,6 @@ class data:
 
     #prints links for positions through page x
     def linksMultPages(self,x):
-        x=x           
         for i in range (1,x):
             url = 'https://jobs.github.com/positions'
             finalurl = url + "?page=" + str(i)
@@ -295,7 +294,7 @@ class data:
 
 
     #returns list of the locations
-    def location():
+    def location(self):
         locs = []
         source = requests.get('https://jobs.github.com/positions').text
         soup = BeautifulSoup(source, 'lxml')
