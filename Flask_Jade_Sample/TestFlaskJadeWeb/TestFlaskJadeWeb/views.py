@@ -27,6 +27,7 @@ repository = create_repository(REPOSITORY_NAME, REPOSITORY_SETTINGS)
 testJob = {
     'Title': 'Experienced JavaScript Front End Developer', 
     'Company': 'Combinaut',
+    'Salary': '$55 - $80 an hour',
     'Contract-Type': 'Full Time', 
     'Time-Posted': '7 days ago', 
     'Location': 'Chicago',
@@ -34,14 +35,38 @@ testJob = {
     'Skills': ['team'], 
     'Desc': """Combinaut is seeking an experienced JavaScript Front End Developer. Combinaut has an immediate need for a developer who has a minimum of  5 years’ professional experience working in JavaScript as a front end developer. We are looking for someone who will be able to work with near autonomy toward agreed goals, with the occasional need for material direction or implementation changes. Ideal candidates will have experience following established patterns and approaches within existing code bases with ease. We are looking for candidates experienced with Backbone.js, Git, and who have a strong understanding of system design. Preference will be given to candidates with Ruby on Rails experience. Our ideal candidate has a team-first mindset, collaborating with our internal and client-side stakeholders to solve problems, design new features, and deliver solid technical solutions. Combinaut - What we Make Combinaut creates tools for healthcare providers to help patients find care. It is important work, and we believe in what we do. We are seeking a full-time Chicago-based staff developer to join our Chicago and remote team. Working With Combinaut We are a very lean crew, with six developers and a handful of support positions. Our developers must work well both independently and collaboratively, each team member is responsible for building and maintaining our end-to-end software stack. We’re a self-organizing team that moves quickly together and contributes across the stack as needed (regardless of specialized knowledge or experience). Every team member is expected to be able to communicate with clarity and professionalism with internal team members as well as with clients. Combinaut believes diversity and inclusion make the workplace better and our product stronger. Every applicant for this position will be considered."""
     }
-db = list()  # The mock database
+testJob2 = {
+    'Title': 'Sr. Java J2EE Developer',
+    'Company': 'Peterson Technology Partners',
+    'Salary': '$55 - $80 an hour',
+    'Contract-Type': 'Contract',
+    'Time-Posted': '21 days ago',
+    'Location':'New York',
+    'Apply-To': 'http://bit.ly/ptp-srjava-so',
+    'Skills': ['SQL', 'manage', 'javascript'],
+    'Desc':"""Peterson Tech Partners Senior Java dev position description. Hello world, test description. """
+    }
+testJob3 = {
+    'Title': 'Front End Developer',
+    'Company':'WHQ',
+    'Salary': '$55 - $80 an hour',
+    'Contract-Type': 'Full Time',
+    'Time-Posted': 'over 1 year ago',
+    'Location':'Houston',
+    'Apply-To': 'https://worldhqinc.com/join/front-end-developer/',
+    'Skills': ['team'],
+    'Desc': """Hello this is a test description. FROGS BE HERE"""
+    }
+
+#allJobs = list()  # The mock database
+#filteredJobs = list()
 posts = 200  # num posts to generate
 quantity = 10  # num posts to return per request
-for x in range(posts):
-        """
-        Creates messages/posts by shuffling the heading & content 
-        to create random strings & appends to the db
-        """
+#for x in range(posts):
+        #"""
+        #Creates messages/posts by shuffling the heading & content 
+        #to create random strings & appends to the allJobs
+        #"""
         #heading_parts = None
         #heading_parts = heading.split(" ")
         #random.shuffle(heading_parts)
@@ -49,9 +74,9 @@ for x in range(posts):
         #content_parts = content.split(" ")
         #random.shuffle(content_parts)
 
-        db.append([x, testJob])
-print('-- DB LEN --')
-print(len(db))
+        #allJobs.append([x, testJob])
+#print('-- allJobs LEN --')
+#print(len(allJobs))
 
 
 @app.route('/')
@@ -122,28 +147,30 @@ def about():
 def jobPage(cnt):
     #print('-- TEST JOB LOAD --')
     #print(cnt)
-    #print(db[int(cnt)])
-    print(db[int(cnt)][1])
+    #print(allJobs[int(cnt)])
+    #print(allJobs[int(cnt)][1])
     #print('-- END TEST --')
     return render_template(
         'pageJob.jade',
-        title = db[int(cnt)][1]['Title'],
-        jobTitle = db[int(cnt)][1]['Title'],
-        jobCompany = db[int(cnt)][1]['Company'],
-        jobContract = db[int(cnt)][1]['Contract-Type'],
-        jobLoc = db[int(cnt)][1]['Location'],
-        jobDesc = db[int(cnt)][1]['Desc']
+        title = session['allJobs'][int(cnt)][1]['Title'],
+        jobTitle = session['allJobs'][int(cnt)][1]['Title'],
+        jobCompany = session['allJobs'][int(cnt)][1]['Company'],
+        jobContract = session['allJobs'][int(cnt)][1]['Contract-Type'],
+        jobLoc = session['allJobs'][int(cnt)][1]['Location'],
+        jobDesc = session['allJobs'][int(cnt)][1]['Desc'],
+        applyTo = session['allJobs'][int(cnt)][1]['Apply-To'],
+        pay = session['allJobs'][int(cnt)][1]['Salary']
     )
 
 @app.route('/load')
 def load():
     counter = int(request.args.get("c"))  # The 'counter' value sent in the QS
-    print(counter)
+    #print('LEN JOBS: ', len(filteredJobs))
 
     if counter == 0:
         print(f"Returning posts 0 to {quantity}")
-        # Slice 0 -> quantity from the db
-        res = make_response(jsonify(db[0: quantity]), 200)
+        # Slice 0 -> quantity from the allJobs
+        res = make_response(jsonify(session['filteredJobs'][0: quantity]), 200)
 
     elif counter == posts:
         print("No more posts")
@@ -151,14 +178,16 @@ def load():
 
     else:
         print(f"Returning posts {counter} to {counter + quantity}")
-        # Slice counter -> quantity from the db
-        res = make_response(jsonify(db[counter: counter + quantity]), 200)
+        # Slice counter -> quantity from the allJobs
+        res = make_response(jsonify(session['filteredJobs'][counter: counter + quantity]), 200)
         #https://pythonise.com/categories/javascript/infinite-lazy-loading#the-example
         #https://www.youtube.com/watch?v=AuBai920D0E
     return res
 
 @app.route('/jobSearch') # routes from menu links
 def jobSearch():
+    session['allJobs'] = []
+    session['filteredJobs'] = []
     return render_template(
             'searchPageJob.jade',
             title = 'Search',
@@ -166,23 +195,161 @@ def jobSearch():
             distance = None,
             pay = None,
             fTime = None,
+            loc = None,
             pTime = None
         )
 
 @app.route('/jobFilter', methods=['POST']) # routes from filter list update
 def jobFilter():
+    #print('CLEAR BUTTON VAL ', request.form.get('ClearSearch', None))
+    #print(request.form['jobFullSearch'])
+    #print(request.form['ClearSearch'])
+
+    print('-- FORM FIELDS --')
+    #print(request.form.get('Pay', '~~~'))
+
+    # text field returns empty string instead of nothing
+    p = request.form.get('Pay', '')
+    p = '~~' if len(p) == 0 else p
+
+    l = request.form.get('Location', '')
+    l = '~~' if len(l) == 0 else l
+
+    filtersDict = {
+                'Pay':p,
+                'Fulltime':request.form.get('FullTime', '~~'),
+                'Parttime':request.form.get('PartTime', '~~'),
+                'Location':l
+             }
+    print(filtersDict)
+
+    # set to None if all vals are ''
+    filtersDict = None if all(val == '~~' for val in filtersDict.values()) else filtersDict
+    print(filtersDict)
+
+    session['allJobs'] = []
+    if request.form.get('jobFullSearch', '').lower() == 'all':
+        searchJobs('ALL JOBS', None)
+
+    elif not request.form.get('jobFullSearch', None) == '':
+        searchJobs(
+            request.form.get('jobFullSearch', ''), 
+            filtersDict)
+    else:
+        print('-- CLEARING SEARCH --')
+        session['allJobs'] = []
+        session['filteredJobs'] = []
+
+    fd = ''
+    if filtersDict == None:
+        fd = 'None'
+    else:
+        for key, val in filtersDict.items():
+            fd = fd + key + ': ' + val + ', '
+
     return render_template(
             'searchPageJob.jade',
             title = 'Search',
-            distance = request.form.get('Distance', None),
-            pay = request.form.get('Pay', None),
-            fTime = request.form.get('FullTime', None),
-            pTime = request.form.get('PartTime', None),
-            quickSearch = None
+            pay = request.form.get('Pay', '~~~'),
+            fTime = request.form.get('FullTime', '~~~'),
+            pTime = request.form.get('PartTime', '~~~'),
+            loc = request.form.get('Location', '~~~'),
+            quickSearch = None,
+            FiltersDesc = fd
         )
+
+# API call to get jobs, populates allJobs
+# uses search params to filter jobs, filtered jobs added to filteredJobs
+# param filters is a dictionary
+def searchJobs(search, filters):
+    session['allJobs'].append([0, testJob])
+    session['allJobs'].append([1, testJob2])
+    session['allJobs'].append([2, testJob3])
+
+    session['filteredJobs'] = []
+
+    #print('SEARCH: ', search)
+    for job in session['allJobs']:
+        if search == 'ALL JOBS': # display all available jobs
+            session['filteredJobs'].append(job)
+            continue
+
+        #print(job)
+        jobL = dict((key, tryLow(val)) for key, val in job[1].items()) # convert all vals in the dict to lower
+        if filters == None: # no filters used, search by search query
+            if any(search.lower() in val for val in jobL.values()):
+                job[0] = len(session['filteredJobs']) # index correction
+                session['filteredJobs'].append(job)
+                continue # added job, don't need to keep checking this job
+
+        else: # include filters in search
+            if any(search.lower() in val for val in jobL.values()):
+                if searchFilters(job[1], filters): 
+                    job[0] = len(session['filteredJobs']) # index correction
+                    session['filteredJobs'].append(job)
+                    continue # added job, don't need to keep checking this job
+
+        # filter logic
+        # if all or any subset of filters then add if it also matches the search criteria
+        # else if no filters set search exclusively by the search criteria
+
+# will see if the search results match with the filters
+def searchFilters (jobDict, filtersDict):
+    #if filtersDict['Location'] not in jobDict['Location']:
+    #    return False
+
+    #if filtersDict['Fulltime'] not in jobDict['Contract-Type'] and filtersDict['Parttime'] not in jobDict['Contract-Type']:
+    #    return False
+
+    #if filtersDict['Pay'] not in jobDict['Salary']:
+    #    return False
+
+    #print(filtersDict)
+    #print(filtersDict['Location'])
+    #print(jobDict['Location'])
+    #print(filtersDict['Fulltime'])
+    #print(filtersDict['Pay'])
+    #print(jobDict['Salary'])
+    #print(filtersDict['Location'] in jobDict['Location'])
+    #print(filtersDict['Pay'] in jobDict['Salary'])
+    #print(filtersDict['Fulltime'] in jobDict['Contract-Type'])
+    #print(filtersDict['Parttime'] in jobDict['Contract-Type'])
+    #print('---')
+    if (filtersDict['Location'].replace(' ', '').lower() in jobDict['Location'].replace(' ', '').lower() or 
+        filtersDict['Pay'].lower() in jobDict['Salary'].lower() or
+        filtersDict['Fulltime'].lower() in jobDict['Contract-Type'].lower() or 
+        filtersDict['Parttime'].lower() in jobDict['Contract-Type'].lower()):
+        return True
+
+    return False
+
+# converts the given string to lowercase 
+# assumes that the input may be a list 
+#   in this case it will convert all the strings in the list to lowercase
+def tryLow(string):
+	try:
+		return string.lower()
+	except:
+		return [x.lower() for x in string]
+
+# searches the given list of skills with the given search string
+def searchSkills (search, skills):
+    for skill in skills:
+        if search.lower() in skill.lower():
+            return True
+
+    return False
 
 @app.route('/quickSearch', methods=['POST']) # routes from the quick search
 def quickSearch():
+    if not request.form.get('jobFullSearch', None) == '':
+        searchJobs(
+            request.form.get('QuickSearch', ''), None)
+    else:
+        print('-- QUICKSEARCH CLEARING SEARCH --')
+        session['allJobs'] = []
+        session['filteredJobs'] = []
+
     return render_template(
             'searchPageJob.jade',
             title = 'Search',
@@ -190,6 +357,7 @@ def quickSearch():
             distance = None,
             pay = None,
             fTime = None,
+            loc = None,
             pTime = None
         )
 
@@ -198,8 +366,8 @@ def seed():
     conn = sqlite3.connect('Users.db')
     cursor = conn.cursor()
 
-    registerStat = request.form.get('Register', None)
-    if registerStat == None: # login, determine usertype, and route page
+    enterStat = request.form.get('Enter', None) # L for login or R for register
+    if enterStat == 'L': # login, determine usertype, and route page
         #get form values, search table, return results
         select_query = """select * from USERS where userName = ?"""
         cursor.execute(select_query, (request.form['UserName'],))

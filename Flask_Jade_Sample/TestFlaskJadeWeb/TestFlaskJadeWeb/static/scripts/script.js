@@ -13,7 +13,7 @@ function loadItems() {
             if (!data.length) {
 
                 // Replace the spinner with "No more posts"
-                sentinel.innerHTML = "No more posts";
+                sentinel.innerHTML = "No more jobs";
                 return;
             }
 
@@ -26,8 +26,8 @@ function loadItems() {
 
                 template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['Title']}`;
                 template_clone.querySelector("#company").innerHTML = `${data[i][1]['Company']}`;
-                template_clone.querySelector("#location").innerHTML = `${data[i][1]['Location']}`;
-                template_clone.querySelector("#pay").innerHTML = "TEMP PAY";
+                template_clone.querySelector("#location").innerHTML = `${data[i][1]['Location']}` + ', ';
+                template_clone.querySelector("#pay").innerHTML = `${data[i][1]['Salary']}`;
                 // Append template to dom
                 scroller.appendChild(template_clone);
 

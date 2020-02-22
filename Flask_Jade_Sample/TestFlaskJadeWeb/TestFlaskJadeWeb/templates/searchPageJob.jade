@@ -4,6 +4,9 @@ block content
 	h2 Search for Jobs
 	form(action='/jobFilter', method='post')
 		input.frogGreenBorder(name='jobFullSearch', placeholder='Search...')
+		button.btn.btn-primary.frogGreen(name='ClearSearch', type='reset', value='RESETSEARCHCODE') Clear
+		br
+		span Active Filters: #{FiltersDesc}
 	hr
 	br
 
@@ -34,19 +37,20 @@ block content
 	div.sidenav.frogNav
 		label Filters
 		form.SearchFilters(action='/jobFilter', method='post')
-			input.frogGreenDarkBorder(style='margin-bottom:8px', type='number', placeholder='Distance', name='Distance')
-			input.frogGreenDarkBorder(style='margin-bottom:8px', type='number', placeholder='Pay', name='Pay')
+			input.frogGreenDarkBorder(style='margin-bottom:8px', type='text', placeholder='Location', name='Location')
+			// input.frogGreenDarkBorder(style='margin-bottom:8px', type='number', placeholder='Distance', name='Distance')
+			input.frogGreenDarkBorder(style='margin-bottom:8px', type='text', placeholder='Pay', name='Pay')
 			
 			div(style='display:flex; margin-bottom:8px')
 				span Full Time
 				label.checkbox-label
-					input(type="checkbox", name='FullTime')
+					input(type="checkbox", value='Full', name='FullTime')
 					span.checkbox-custom.rectangular.frogGreenDarkBorder
 
 			div(style='display:flex; margin-bottom:8px')
 				span Part Time
 				label.checkbox-label
-					input(type="checkbox", name='PartTime')
+					input(type="checkbox", value='Part', name='PartTime')
 					span.checkbox-custom.rectangular.frogGreenDarkBorder
 
 			button.btn.btn-primary.center.frogGreen(

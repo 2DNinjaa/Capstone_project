@@ -5,11 +5,25 @@ html
 		
 		title #{title} - Job Hopper
 
+		link(rel='stylesheet', type='text/css', href='/static/content/bootstrap.min.css')
 		link(rel='stylesheet', type='text/css', href='/static/content/Styles.css')
 		link(rel='stylesheet', type='text/css', href='/static/content/StylesSidebar.css')
+		link(rel='stylesheet', type='text/css', href='/static/content/StylesNavbar.css')
 
 	body
-		.BodyContent
+		.navbar.navbar-inverse.navbar-fixed-top.frogNav
+			.container
+				.navbar-header
+					button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+				.navbar-collapse.collapse
+					ul.nav.navbar-nav
+						li
+							a.frogGreen(href='/jobSearch') Back
+
+		.BodyContent(style='margin-top:75px; padding-left:5%; padding-right:5%; width:90%')
 			.inline
 				h2 #{jobTitle}
 				a(href='#') Bookmark
@@ -19,21 +33,23 @@ html
 				| , 
 				h4 #{jobLoc}
 				| , 
-				h4 PAY
+				h4 #{pay}
 				br
 				br
-				a(href='#')
+				a(href='#{applyTo}')
 					| Apply at 
-					span COMPANY NAME
+					span #{jobCompany}
 			br
 			hr
 			br
 			h3 Description
 			p #{jobDesc}
-		.sidenav.frogNav
-			a.frogGreen(href='#') Home
-			a.frogGreen(href='#') Search
+
+			.footer
+				h3 Related Jobs
+
+		.sidenav.frogNav(style='width:10%')
+			a.frogGreen(href='/') Home
+			a.frogGreen(href='/jobSearch') Search
 			a.frogGreen(href='#') Graph
 			a.frogGreen(href='#') Bookmarks
-		.footer
-			h3 Related Jobs

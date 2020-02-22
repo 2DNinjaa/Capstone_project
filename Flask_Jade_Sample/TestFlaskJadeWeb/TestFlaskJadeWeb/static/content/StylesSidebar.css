@@ -19,7 +19,7 @@
   display: block;
 }
 
-.sidenav input[type=number] {
+.sidenav input[type=number], input[type=text] {
 	width: 95%;
 }
 
