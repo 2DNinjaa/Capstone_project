@@ -231,11 +231,11 @@ def jobFilter():
     if request.form.get('jobFullSearch', '').lower() == 'all':
         searchJobs('ALL JOBS', None)
 
-    elif not request.form.get('jobFullSearch', None) == '':
+    elif not request.form.get('jobFullSearch', '') == '':
         searchJobs(
             request.form.get('jobFullSearch', ''), 
             filtersDict)
-    else:
+    elif request.form.get('jobFullSearch', '') == '' and filtersDict == None: # TODO: this needs to be if search AND filters are both empty
         print('-- CLEARING SEARCH --')
         session['allJobs'] = []
         session['filteredJobs'] = []
