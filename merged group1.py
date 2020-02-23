@@ -100,7 +100,7 @@ class data:
         e=4
         r=2
         t=3
-        self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
+        #self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         table_query = """create table if not exists JOBS
