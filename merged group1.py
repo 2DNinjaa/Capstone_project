@@ -96,8 +96,7 @@ class data:
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self):
-        self.listing=[{'Title': 'Experienced JavaScript Front End Developer', 'Contract-Type': 'Combinaut', 'Time-Posted': 'Full Time', 'Other': '16 days ago', 'Apply-To': 'mailto:alex@combinaut.com', 'Skills': ['javascript', 'team'], 'Desc': 'description1 '},{'Title': 'Sr. Java J2EE Developer', 'Contract-Type': 'Peterson Technology Partners', 'Time-Posted': 'Contract', 'Other': '25 days ago', 'Apply-To': 'http://bit.ly/ptp-srjava-so', 'Skills': ['java', 'sql', 'manage', 'javascript', 'team'], 'Desc': "description2"}]
-
+        self.listing=["a","b","c"]#fix this
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         table_query = """create table if not exists JOBS
@@ -116,11 +115,13 @@ class data:
             cursor.execute(insert_query, data_tuples)
 
             
-            data_tuples = (self.listing[i]['Location'], self.listing[i]['Company'], 
+            data_tuples = ("Job location", self.listing[i]['Company'], 
                            self.listing[i]['Time-Posted'], "", self.listing[i]['Contract-Type'], 
                            self.listing[i]['Title'], self.listing[i]['Desc'].text, self.listing[i]['Apply-To'])
 
-			cursor.execute(insert_query, data_tuples)
+            dummy=("","","","","","","","")
+            cursor.execute(insert_query, dummy)
+            #cursor.execute(insert_query, data_tuples)
 
             
         #print("DONE")
