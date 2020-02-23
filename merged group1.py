@@ -351,16 +351,14 @@ class data:
                     if len(y) > 1 and not "\t" in y:
                         if x == 0:
                             jb['Title'] = y
-                        elif x == 1:
-                            jb['Company'] = y
                         elif x == 2:
-                            jb['Contract-Type'] = y
-                        elif x == 3:
-                            jb['Location'] = y
+                            jb['Company'] = y
                         elif x == 4:
+                            jb['Contract-Type'] = y
+                        elif x == 7:
+                            jb['Location'] = y
+                        elif x == 8:
                             jb['Time-Posted'] = y
-                        else:
-                            jb['Other'] = y
                         
                 jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
                 jb['Apply-To'] = jobMeta[0]
