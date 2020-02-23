@@ -110,18 +110,18 @@ class data:
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
-<<<<<<< HEAD
+
             data_tuples = ("Job location",self.listing[i]["Contract-Type"], self.listing[i]["Other"],"URL to job post", self.listing[i]["Time-Posted"],self.listing[i]["Title"], self.listing[i]["Desc"], self.listing[i]["Apply-To"])
             
             cursor.execute(insert_query, data_tuples)
-=======
+
             
             data_tuples = (self.listing[i]['Location'], self.listing[i]['Company'], 
                            self.listing[i]['Time-Posted'], "", self.listing[i]['Contract-Type'], 
                            self.listing[i]['Title'], self.listing[i]['Desc'].text, self.listing[i]['Apply-To'])
 
 			cursor.execute(insert_query, data_tuples)
->>>>>>> 90d9b98947a219f8a0476beecb6e9a2fd8735086
+
             
         #print("DONE")
         conn.commit()
