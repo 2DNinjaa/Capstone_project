@@ -95,13 +95,9 @@ class data:
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self):
-        #q=1 # TODO: remove vars q, w, e, r, t?
-        #w=0
-        #e=4
-        #r=2
-        #t=3
-        #self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
-        conn = sqlite3.connect("Users.db")
+        self.listing=[{'Title': 'Experienced JavaScript Front End Developer', 'Contract-Type': 'Combinaut', 'Time-Posted': 'Full Time', 'Other': '16 days ago', 'Apply-To': 'mailto:alex@combinaut.com', 'Skills': ['javascript', 'team'], 'Desc': 'description1 '},{'Title': 'Sr. Java J2EE Developer', 'Contract-Type': 'Peterson Technology Partners', 'Time-Posted': 'Contract', 'Other': '25 days ago', 'Apply-To': 'http://bit.ly/ptp-srjava-so', 'Skills': ['java', 'sql', 'manage', 'javascript', 'team'], 'Desc': "description2"}]
+
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         table_query = """create table if not exists JOBS
                             (location text, company text, datePosted text, postUrl text, 
@@ -117,12 +113,8 @@ class data:
             data_tuples = (self.listing[i]['Location'], self.listing[i]['Company'], 
                            self.listing[i]['Time-Posted'], "", self.listing[i]['Contract-Type'], 
                            self.listing[i]['Title'], self.listing[i]['Desc'].text, self.listing[i]['Apply-To'])
-            #q+=5 # TODO: see previous todo
-            #w+=5
-            #e+=5
-            #r+=5
-            #t+=5
-            cursor.execute(insert_query, data_tuples)
+
+			cursor.execute(insert_query, data_tuples)
             
         #print("DONE")
         conn.commit()
@@ -146,6 +138,12 @@ class data:
     def getOwnListing(self):
         return self.listing
     
+
+
+
+
+
+
 
 
 ###CAN CHANGE TO RUN LINKS THROUGH METHODS (have links as method parameters)
