@@ -8,7 +8,6 @@ import json
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
-
 # In[20]:
 
 
@@ -31,7 +30,7 @@ class data:
         self.jobLocation="none"
         self.company="none"
         self.listing=[]
-        self.jobLst={}
+        self.jobLst=[]
         
         # keywords used in skill identification
         self.keyWordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
@@ -82,13 +81,13 @@ class data:
             
         if self.cnt>=10 and self.cnt<100:
             self.cnt+=1
-            self.jobLst.append(temp)
+            self.listing.append(temp)
             link=link.replace(link[-2:],cnt)
             return self.allocation(link)
         else:
             print("entered into else" +str(self.cnt))
             self.cnt+=1
-            self.jobLst.append(temp)
+            self.listing.append(temp)
             link=link.replace(link[-1],str(self.cnt))
             return self.allocation(link)   
         #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
@@ -469,7 +468,3 @@ class data:
 
 
 # In[ ]:
-
-
-
-
