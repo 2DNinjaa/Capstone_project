@@ -1,5 +1,3 @@
-
-
 #Capstone
 #Group 1
 import webbrowser
@@ -33,7 +31,7 @@ class data:
         self.jobLocation="none"
         self.company="none"
         self.listing=[]
-        self.lst={}
+        self.jobLst={}
         
         # keywords used in skill identification
         self.keyWordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
@@ -84,13 +82,13 @@ class data:
             
         if self.cnt>=10 and self.cnt<100:
             self.cnt+=1
-            self.listing.append(temp)
+            self.jobLst.append(temp)
             link=link.replace(link[-2:],cnt)
             return self.allocation(link)
         else:
             print("entered into else" +str(self.cnt))
             self.cnt+=1
-            self.listing.append(temp)
+            self.jobLst.append(temp)
             link=link.replace(link[-1],str(self.cnt))
             return self.allocation(link)   
         #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
@@ -103,7 +101,6 @@ class data:
         e=4
         r=2
         t=3
-        return "hi"
         self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
