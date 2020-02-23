@@ -103,6 +103,7 @@ class data:
         e=4
         r=2
         t=3
+        return "hi"
         self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
@@ -322,7 +323,7 @@ class data:
     # also returns links
     def getJobLLP(self,loc, numPages):
         multPageLocJobsWL = [] # will be populated with job dictionaries
-        
+        print("III")
         for i in range (0, numPages): # iterating over pages until numPages
             loc = loc.replace(' ', '+')
             url = 'https://jobs.github.com/positions' + '?page=' + str(i)
@@ -410,8 +411,9 @@ class data:
     #for now prints out several dictionaries for each job post on the page (50)
     def create(self,loc = 'chicago', numPages = 1):
         
-        print (getJobLLP (loc, numPages))
-        
+        self.listing=self.getJobLLP (loc, numPages)
+        self.testing()
+        print("done")
         #source = requests.get('https://jobs.github.com/positions').text
         #soup = BeautifulSoup(source, 'lxml')
         
