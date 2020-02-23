@@ -105,14 +105,13 @@ class data:
         cursor.execute(table_query)
         conn.commit()
         
-        for i in range(len(self.listing)):
+        for i in range(3)):
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
 
-            data_tuples = ("Job location",self.listing[i]["Contract-Type"], self.listing[i]["Other"],"URL to job post", self.listing[i]["Time-Posted"],self.listing[i]["Title"], self.listing[i]["Desc"], self.listing[i]["Apply-To"])
             
-            cursor.execute(insert_query, data_tuples)
+            #cursor.execute(insert_query, data_tuples)
 
             
             data_tuples = ("Job location", self.listing[i]['Company'], 
@@ -352,14 +351,16 @@ class data:
                     if len(y) > 1 and not "\t" in y:
                         if x == 0:
                             jb['Title'] = y
-                        elif x == 2:
+                        elif x == 1:
                             jb['Company'] = y
-                        elif x == 4:
+                        elif x == 2:
                             jb['Contract-Type'] = y
-                        elif x == 7:
+                        elif x == 3:
                             jb['Location'] = y
-                        elif x == 8:
+                        elif x == 4:
                             jb['Time-Posted'] = y
+                        else:
+                            jb['Other'] = y
                         
                 jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
                 jb['Apply-To'] = jobMeta[0]
