@@ -110,7 +110,7 @@ class data:
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
-            data_tuples = ("Job location",self.listing[i]["Contract-Type"], self.listing[i]["Other"],"","URL to job post", self.listing["Time-posted"]["Title"], self.listing[i]["Desc"], self.listing[i]["Apply-To"])
+            data_tuples = ("Job location",self.listing[i]["Contract-Type"], self.listing[i]["Other"],"URL to job post", self.listing[i]["Time-Posted"],self.listing[i]["Title"], self.listing[i]["Desc"], self.listing[i]["Apply-To"])
             
             cursor.execute(insert_query, data_tuples)
             
