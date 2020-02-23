@@ -358,7 +358,7 @@ class data:
                         else:
                             jb['Other'] = y
                         
-                jobMeta = getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
+                jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
                 jb['Apply-To'] = jobMeta[0]
                 jb['Skills'] = jobMeta[1]
                 jb['Desc'] = jobMeta[2]
