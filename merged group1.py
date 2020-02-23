@@ -96,12 +96,8 @@ class data:
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self):
-        q=1 # TODO: remove vars q, w, e, r, t?
-        w=0
-        e=4
-        r=2
-        t=3
-        self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
+        self.listing=[{'Title': 'Experienced JavaScript Front End Developer', 'Contract-Type': 'Combinaut', 'Time-Posted': 'Full Time', 'Other': '16 days ago', 'Apply-To': 'mailto:alex@combinaut.com', 'Skills': ['javascript', 'team'], 'Desc': 'description1 '},{'Title': 'Sr. Java J2EE Developer', 'Contract-Type': 'Peterson Technology Partners', 'Time-Posted': 'Contract', 'Other': '25 days ago', 'Apply-To': 'http://bit.ly/ptp-srjava-so', 'Skills': ['java', 'sql', 'manage', 'javascript', 'team'], 'Desc': "description2"}]
+
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         table_query = """create table if not exists JOBS
@@ -114,12 +110,8 @@ class data:
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
-            data_tuples = (self.listing[i][q],self.listing[i][w], self.listing[i][e],"", self.listing[i][r], self.listing[i][t], "", "")
-            q+=5 # TODO: see previous todo
-            w+=5
-            e+=5
-            r+=5
-            t+=5
+            data_tuples = ("Job location",self.listing[i]["Contract-Type"], self.listing[i]["Other"],"","URL to job post", self.listing["Time-posted"]["Title"], self.listing[i]["Desc"], self.listing[i]["Apply-To"])
+            
             cursor.execute(insert_query, data_tuples)
             
         #print("DONE")
@@ -144,6 +136,12 @@ class data:
     def getOwnListing(self):
         return self.listing
     
+
+
+
+
+
+
 
 
 ###CAN CHANGE TO RUN LINKS THROUGH METHODS (have links as method parameters)
