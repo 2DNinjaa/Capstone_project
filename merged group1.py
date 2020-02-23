@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[6]:
 
 
 #Capstone
@@ -37,6 +33,7 @@ class data:
         self.jobLocation="none"
         self.company="none"
         self.listing=[]
+        self.lst={}
         
         # keywords used in skill identification
         self.keyWordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
@@ -53,34 +50,6 @@ class data:
         records = cursor.fetchall()
         return records
 
-    #send user info to database
-    def userSender(self, name, password, user):
-        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
-        cursor = conn.cursor()
-        insert_query= "INSERT INTO USERS(UserName, Password,UserType) VALUES(?,?,?)"
-        cursor.execute(insert_query, (name,password,user))
-        conn.commit()
-        cursor.close()
-        return # TODO: value to return?
-
-
-    #send job info to database
-    def jobSender(self,jobLocation,company,time,url,jobType,jobTitle,jobDes,app):
-        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
-        cursor = conn.cursor()
-        insert_query = "create table if not exists Jobs (jobLocation text,company text,datePosted text,postUrl text,jobType text,jobTitle text, jobDes text, jobApp text) VALUES(?,?,?,?,?,?,?,?,?)"
-        cursor.execute(insert_query,(jobLocation,company,time,url,jobType,jobTitle,jobDes,app))
-        conn.commit()
-        cursor.close()
-        return # TODO: value to return?
-    
-    # unnessary ?
-    #dummy function to simulate the front end
-    #def dummy(self):
-        #might need to add more variables if i missed any user ones
-        #info=["Chicago","Software developerr",["Pyton","Java","C"],"3 years","Masters"]
-        #return self.userInfo(info)        
-    
     # sets global variables to be fed for the front end
     # user info should be sent back in a standardized list
     def userInfo(self,info):
@@ -94,6 +63,7 @@ class data:
     
     # gather job info
     def allocation(self,link):
+        'gathers basic info about jobs from github'
         r=requests.get(link)
         p=r.json()
         temp=[]
