@@ -95,13 +95,13 @@ class data:
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self):
-        q=1 # TODO: remove vars q, w, e, r, t?
-        w=0
-        e=4
-        r=2
-        t=3
+        #q=1 # TODO: remove vars q, w, e, r, t?
+        #w=0
+        #e=4
+        #r=2
+        #t=3
         #self.allocation("https://jobs.github.com/positions.json?page=1") # TODO: parameterize?
-        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        conn = sqlite3.connect("Users.db")
         cursor = conn.cursor()
         table_query = """create table if not exists JOBS
                             (location text, company text, datePosted text, postUrl text, 
@@ -113,12 +113,15 @@ class data:
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
-            data_tuples = (self.listing[i][q],self.listing[i][w], self.listing[i][e],"", self.listing[i][r], self.listing[i][t], "", "")
-            q+=5 # TODO: see previous todo
-            w+=5
-            e+=5
-            r+=5
-            t+=5
+            
+            data_tuples = (self.listing[i]['Location'], self.listing[i]['Company'], 
+                           self.listing[i]['Time-Posted'], "", self.listing[i]['Contract-Type'], 
+                           self.listing[i]['Title'], self.listing[i]['Desc'].text, self.listing[i]['Apply-To'])
+            #q+=5 # TODO: see previous todo
+            #w+=5
+            #e+=5
+            #r+=5
+            #t+=5
             cursor.execute(insert_query, data_tuples)
             
         #print("DONE")
@@ -338,22 +341,23 @@ class data:
                 #link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href']) # get apply to link
                 tmp = job.text.strip().split('\n')
                 jb = {}
+                #print(tmp)
                 for x in range (0, len(tmp)):
                     y = tmp[x].strip()
+                    #print(x, ' : ', y)
                     if len(y) > 1 and not "\t" in y:
                         if x == 0:
                             jb['Title'] = y
-                        elif x == 1:
-                            jb['Company'] = y
                         elif x == 2:
-                            jb['Contract-Type'] = y
-                        elif x == 3:
-                            jb['Location'] = y
+                            jb['Company'] = y
                         elif x == 4:
+                            jb['Contract-Type'] = y
+                        elif x == 7:
+                            jb['Location'] = y
+                        elif x == 8:
                             jb['Time-Posted'] = y
-                        else:
-                            jb['Other'] = y
                         
+                   
                 jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
                 jb['Apply-To'] = jobMeta[0]
                 jb['Skills'] = jobMeta[1]
