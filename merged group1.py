@@ -96,7 +96,6 @@ class data:
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self):
-        self.listing=["a","b","c"]#fix this
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         table_query = """create table if not exists JOBS
@@ -105,22 +104,17 @@ class data:
         cursor.execute(table_query)
         conn.commit()
         
-        for i in range(3)):
+        for i in range(len(self.listing)):
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
 
             
-            #cursor.execute(insert_query, data_tuples)
-
-            
             data_tuples = ("Job location", self.listing[i]['Company'], 
                            self.listing[i]['Time-Posted'], "", self.listing[i]['Contract-Type'], 
-                           self.listing[i]['Title'], self.listing[i]['Desc'].text, self.listing[i]['Apply-To'])
+                           self.listing[i]['Title'], self.listing[i]['Desc'], self.listing[i]['Apply-To'])
 
-            dummy=("","","","","","","","")
-            cursor.execute(insert_query, dummy)
-            #cursor.execute(insert_query, data_tuples)
+            cursor.execute(insert_query, data_tuples)
 
             
         #print("DONE")
