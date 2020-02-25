@@ -38,9 +38,13 @@ class data:
         self.company="none"
         self.listing=[]
         
-        # keywords used in skill identification
-        self.keyWordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
-        
+         # keywords used in skill identification (ADDED SKILLS)
+        self.keyWordSkills = ['python', 'java', 'c++', 'sql', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end', 'html', 'css','json', 'xml','api', 'linux', 'nodejs', 'c#', 'spark', 'sas', 'matlab', 'excel', 'spark', 'hadoop', 'azure', 'spss', 'git']
+
+
+        #ADDED
+        self.keyWordEdu = ['masters', 'bachelors', "master's", "bachelor's", 'phd', 'undergrad', 'graduate', 'undergraduate', 'ged', "graduate's", "undergraduate's", "associate's", 'doctoral']
+                
     def __repr__(self):
         return self.exp
 
@@ -400,6 +404,7 @@ class data:
                 jb['Skills'] = jobMeta[1]
                 jb['Desc'] = jobMeta[2]
                 jb['Page-Addr'] = jobMeta[3]
+                jb['Education'] = jobMeta[4]
                 
                 multPageLocJobsWL.append(jb)
         return multPageLocJobsWL
@@ -494,16 +499,19 @@ class data:
         #keywordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
         foundSkillsList = []
         
-        #url = link
-        #src = requests.get(url).text
-        #soup = BeautifulSoup(src, 'lxml')
+
 
         summary = newSoup.find('div', class_='column main')
-        #print (summary)
+        
         sumtext = summary.text
+        sumtext = sumtext.lower()
         sumList = sumtext.split()
-        #print ('====================================')
-
+        
+        #ADDED
+        for i in self.keyWordEdu:
+            if i in sumList:
+                foundEduList.append(i)
+                
         for i in self.keyWordSkills:
             if i in sumList:
                 foundSkillsList.append(i)
@@ -511,7 +519,7 @@ class data:
         
         desc = newSoup.find('div', class_='column main').text
         
-        return [jobLink, foundSkillsList, desc, url]
+        return [jobLink, foundSkillsList, desc, url, foundEduList]
 
 
 # In[ ]:
