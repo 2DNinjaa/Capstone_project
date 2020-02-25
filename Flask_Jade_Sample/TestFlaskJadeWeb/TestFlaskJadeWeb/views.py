@@ -11,6 +11,8 @@ from TestFlaskJadeWeb.models import PollNotFound
 from TestFlaskJadeWeb.models.factory import create_repository
 from TestFlaskJadeWeb.settings import REPOSITORY_NAME, REPOSITORY_SETTINGS
 
+from .github_jobs import *
+
 import sqlite3
 import requests
 
@@ -166,6 +168,7 @@ def jobPage(cnt):
 def load():
     counter = int(request.args.get("c"))  # The 'counter' value sent in the QS
     #print('LEN JOBS: ', len(filteredJobs))
+    session['offset'] += counter
 
     if counter == 0:
         print(f"Returning posts 0 to {quantity}")
@@ -186,8 +189,8 @@ def load():
 
 @app.route('/jobSearch') # routes from menu links
 def jobSearch():
-    session['allJobs'] = []
     session['filteredJobs'] = []
+    session['offset'] = 0
     return render_template(
             'searchPageJob.jade',
             title = 'Search',
@@ -237,7 +240,6 @@ def jobFilter():
             filtersDict)
     elif request.form.get('jobFullSearch', '') == '' and filtersDict == None: # TODO: this needs to be if search AND filters are both empty
         print('-- CLEARING SEARCH --')
-        session['allJobs'] = []
         session['filteredJobs'] = []
 
     fd = ''
@@ -262,14 +264,19 @@ def jobFilter():
 # uses search params to filter jobs, filtered jobs added to filteredJobs
 # param filters is a dictionary
 def searchJobs(search, filters):
-    session['allJobs'].append([0, testJob])
-    session['allJobs'].append([1, testJob2])
-    session['allJobs'].append([2, testJob3])
+    loc = 'chicago'
+    if filters != None and 'Location' in filters.values():
+        loc = filters['Location']
+
+
+    jobsData = data()
+    jobsData.create(loc, 1)
+    jobsPage = jobsData.getNJobs(session['offset'], 10)
 
     session['filteredJobs'] = []
 
     #print('SEARCH: ', search)
-    for job in session['allJobs']:
+    for job in jobsPage:
         if search == 'ALL JOBS': # display all available jobs
             session['filteredJobs'].append(job)
             continue
@@ -295,26 +302,6 @@ def searchJobs(search, filters):
 
 # will see if the search results match with the filters
 def searchFilters (jobDict, filtersDict):
-    #if filtersDict['Location'] not in jobDict['Location']:
-    #    return False
-
-    #if filtersDict['Fulltime'] not in jobDict['Contract-Type'] and filtersDict['Parttime'] not in jobDict['Contract-Type']:
-    #    return False
-
-    #if filtersDict['Pay'] not in jobDict['Salary']:
-    #    return False
-
-    #print(filtersDict)
-    #print(filtersDict['Location'])
-    #print(jobDict['Location'])
-    #print(filtersDict['Fulltime'])
-    #print(filtersDict['Pay'])
-    #print(jobDict['Salary'])
-    #print(filtersDict['Location'] in jobDict['Location'])
-    #print(filtersDict['Pay'] in jobDict['Salary'])
-    #print(filtersDict['Fulltime'] in jobDict['Contract-Type'])
-    #print(filtersDict['Parttime'] in jobDict['Contract-Type'])
-    #print('---')
     if (filtersDict['Location'].replace(' ', '').lower() in jobDict['Location'].replace(' ', '').lower() or 
         filtersDict['Pay'].lower() in jobDict['Salary'].lower() or
         filtersDict['Fulltime'].lower() in jobDict['Contract-Type'].lower() or 
@@ -342,12 +329,12 @@ def searchSkills (search, skills):
 
 @app.route('/quickSearch', methods=['POST']) # routes from the quick search
 def quickSearch():
+    session['offset'] = 0
     if not request.form.get('jobFullSearch', None) == '':
         searchJobs(
             request.form.get('QuickSearch', ''), None)
     else:
         print('-- QUICKSEARCH CLEARING SEARCH --')
-        session['allJobs'] = []
         session['filteredJobs'] = []
 
     return render_template(
