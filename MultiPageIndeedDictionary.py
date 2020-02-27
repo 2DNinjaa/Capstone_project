@@ -63,6 +63,7 @@ def getDict(url):
     skillList = []
     descList = []
     catList = []
+    eduList= []
     
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
