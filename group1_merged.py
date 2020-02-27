@@ -53,11 +53,12 @@ class data:
     def db(self):
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        select_query = """select * from Users """        #change JOBS to whatever table you want to see
+        select_query = """select * from JOBS """        #change JOBS to whatever table you want to see
         cursor.execute(select_query)
         records = cursor.fetchall()
         cursor.close()
         conn.close()
+        #print(len(records))
         return records
 
     # sets global variables to be fed for the front end
@@ -111,6 +112,43 @@ class data:
     def testing(self):
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
+
+
+
+        entry=[{'Title': 'Experienced JavaScript Front End Developer',
+  'Company': 'Combinaut',
+  'Contract-Type': 'Full Time',
+  'Location': 'Chicago',
+  'Time-Posted': '17 days ago',
+  'Apply-To': 'mailto:alex@combinaut.com',
+  'Skills': ['team'],
+  'Desc': '\nCombinaut is seeking an experienced JavaScript Front End Developer.\nCombinaut has an immediate need for a developer who has a minimum of  5 years’ professional experience working in JavaScript as a front end developer. We are looking for someone who will be able to work with near autonomy toward agreed goals, with the occasional need for material direction or implementation changes. Ideal candidates will have experience following established patterns and approaches within existing code bases with ease. We are looking for candidates experienced with Backbone.js, Git, and who have a strong understanding of system design. Preference will be given to candidates with Ruby on Rails experience.\nOur ideal candidate has a team-first mindset, collaborating with our internal and client-side stakeholders to solve problems, design new features, and deliver solid technical solutions.\nCombinaut - What we Make\nCombinaut creates tools for healthcare providers to help patients find care. It is important work, and we believe in what we do. We are seeking a full-time Chicago-based staff developer to join our Chicago and remote team.\nWorking With Combinaut\nWe are a very lean crew, with six developers and a handful of support positions. Our developers must work well both independently and collaboratively, each team member is responsible for building and maintaining our end-to-end software stack. We’re a self-organizing team that moves quickly together and contributes across the stack as needed (regardless of specialized knowledge or experience). Every team member is expected to be able to communicate with clarity and professionalism with internal team members as well as with clients.\nCombinaut believes diversity and inclusion make the workplace better and our product stronger. Every applicant for this position will be considered.\n'},
+ {'Title': 'Sr. Java J2EE Developer',
+  'Company': 'Peterson Technology Partners',
+  'Contract-Type': 'Contract',
+  'Location': 'Chicago, IL',
+  'Time-Posted': '26 days ago',
+  'Apply-To': 'http://bit.ly/ptp-srjava-so',
+  'Skills': ['SQL', 'manage', 'javascript', 'team'],
+  'Desc': "\nBecome a Senior Java Developer with Peterson Technology Partners today!\nApply at:\n\nSummary:\nThis key position will be the primary Java Developer supporting Master Data Management software (MDM a.k.a GEM). This software is the key component of our customer solutions (CRM). GEM provides a comprehensive view of the Guest profile and preference information to interfacing systems like RESERVE, Gold Passport, etc.\nThis position reports directly to the Director of Customer Data Management\nRequirements:\n\nKnowledge of Service-Oriented Architectures\nKnowledge of Web-based Architectures\nKnowledge of database design and file management techniques\nTechnically fluent in the Java programming language\nHands-on experience with Java Spring MVC, spring boot and SOAP services\nExperience with app servers, JBOSS, DOCKER desired\nProduction support experience is desired\nExperience using javascript is plus\n\nResponsibilities:\n\nSupport Envision Opera Interface and Guest Customer Service applications.\nWork with offsite contract developers to manage the development of new reports and also assist in supporting existing reports and cubes.\nSupport for application maintenance or other system related maintenance events on an on-call basis.\nDevelop applications leveraging J2EE and Web technologies from start to finish on their own. This includes but is not limited to; customer interaction, validating requirements, system design, full-stack development using standard APIs.\nDevelop complex SQL queries, direct interaction with J2EE and Web application servers, build/deployment automation and application performance measurement and tuning.\nCollaborate with Project Managers and Stakeholders to execute on projects.\nOutline specific technical deliverables, provide input to project plans and milestones.\nProvide Technical leadership for projects to design effective solutions.\nMentor other developers on the team.\nLead key project activities - architecture, design, development, QA/QC and deployment of new J2ee/Web applications.\nCommunicate project plans and status with Supervisor.\nEnsure that applications adhere to Application Engineering guidelines, processes and procedures.\nDevelop technical deliverables and review technical documents.\nProvide required development or operational support.\nProvide support outside of business hours.\nWork closely with the IT liaisons and external services providers to improve and optimize applications to deliver superb performance and end-user experience.\n\nThese position responsibilities are not necessarily all-encompassing.\nOther duties, responsibilities, and qualifications may be required and/or assigned as necessary.\nExperience and Qualifications:\n\n7 years or more of progressively responsible application development experience.\nExperience with front end development in large-scale Enterprise Java applications.\nDemonstrated ability to create reusable components that can be leveraged across multiple applications.\nDemonstrated ability to support, review application logs and dive into root cause analysis.\nExceptional attention to detail, organization, planning and project management skills.\nStrong quantitative, analytical, critical-thinking and problem-solving skills.\nProven ability to influence and work with cross-functional teams.\nSignificant skill required to work effectively across internal functional areas in situations where clear parameters may not exist.\nProven record of being a strong team player - a whatever-it-takes attitude to complete a project successfully for the team.\nStrong work ethic and personal integrity; self-directed and self-motivated with a highly developed curiosity and willingness to learn and to teach.\nExcellent verbal and written communication skills as well as interpersonal and influencing skills.\nAbility to define and capture business needs along with articulating strategic implications of analytic results with clarity and persuasiveness in an audience-appropriate manner.\nSoftware development in language pertinent to project (Java, HTML5, CSS3, node.js, JavaScript (JQuery).\nStrong front end and backend development skills. Solid experience in Java design, coding, testing and debugging techniques.\nSolid experience in enterprise-level J2EE platforms using J2EE design patterns. Solid experience in SOAP/REST web service development.\nStrong SQL knowledge - especially on DB2 preferred.\nSpring Framework, JMS, DOJO, AJAX, Eclipse, Hibernate, JUnit, Struts.\nXML/JSON data interchange formats. Subversion/Git. JBoss, Tomcat is required.\nFamiliarity with IBM DB2 and Oracle databases.\nHighly motivated self-starter who is very good at learning and mastering new technologies without much guidance.\n\nPreferred Skills:\n\nPrevious consulting experience desired\nFamiliarity with Informatica's ETL/MDM\n\nEducation:\n\nBachelor's degree, preferably in computer science, engineering, mathematics, statistics or related discipline.\nGraduate degree preferred.\nJava Certification is a plus.\nAWS Developer certification is a plus.\n\nApply today on:\n\nOr learn more at ptechpartners.com\nAbout Peterson Technology Partners\nPeterson Technology Partners (PTP) is proud to be Chicago's premier Information Technology (IT) staffing, consulting, and recruiting firm for over 22+ years.\nOur 250+ employees have a narrow focus on a single market (Chicago) and have expertise in 4 innovative technical areas:\n\n\nArtificial Intelligence/Machine Learning/Data Science\n\n\nRobotics/Robotic Process Automation (RPA)\n\n\nCyber/Data/Information Security\n\n\nDevOps/DevSecOps\n\n\nConnect: LinkedIn | Facebook | Twitter | YouTube | All Social Links\nApply: Stack Overflow | Dice | LinkedIn | Glassdoor | All Job Openings\nReview: Google | Glassdoor | Yelp | All Review Links\nListen: iTunes | Spotify | Stitcher | All Podcast Links\nPeterson Technology Partners is an Equal Opportunity Employer\n\n"},
+ {'Title': 'Front End Developer',
+  'Company': 'WHQ',
+  'Contract-Type': 'Full Time',
+  'Location': 'Chicago',
+  'Time-Posted': 'over 1 year ago',
+  'Apply-To': 'https://worldhqinc.com/join/front-end-developer/',
+  'Skills': ['team'],
+  'Desc': "\nYou’re always looking at new technologies and you push to innovate. WHQ is where you need to be. We’re a team of designers, developers, and strategists who work on web, mobile, environmental and brand projects. Tough problems demand big ideas. We think quickly and are always looking for ways to push our clients and ourselves. Think you'd fit in? Read on.\nResponsibilities:\n\nWrite solid HTML, CSS and JavaScript for web sites and applications\nBuild responsive web sites that function perfectly on any device or browser size\nPerform cross-browser compatibility tests and iterate to work through bugs\nJump into existing JavaScript applications, or start them from the ground up\nLearn new technologies and share ideas\n\nQualifications:\n\nExpert skills in HTML, CSS and JavaScript\nExperience with JavaScript frameworks\nExperience will Less or Sass\nSolid command of responsive layouts\nExperience with Git and version control tools\nTesting experience is a plus\n3+ years within the industry\n\n"},
+ {'Title': 'Senior Python Engineer',
+  'Company': 'Squirro',
+  'Contract-Type': 'Full Time',
+  'Location': 'Zurich',
+  'Time-Posted': 'over 1 year ago',
+  'Apply-To': 'mailto:jobs@squirro.com',
+  'Skills': ['team'],
+  'Desc': '\nWe’re looking for senior engineers with solid Python skills to join our team, which is building a platform, called Squirro, for unstructured data analysis.\nSquirro can ingest data from anywhere, be it public on the web or social medium or internal, such as a CRM, database or ITSM system, and add structure to it so that it can be delivered to business users using our dashboard visualisations or consumed by other systems using our APIs. We add structure to unstructured data by employing a range of techniques, from statistical and Bayesian models to supervised and unsupervised machine learning which we serve to our customers as a unified and patented technology we call Smartfilters. Meanwhile, for our users, we provide a simple interface to access these technologies so that anyone with basic analytical skills can get value out of their companies unstructured data.\nOur customers are some of the largest banks and financial institutions in the world, across the US, UK, EU, Switzerland and Asia. Many of our customers are just beginning to discover the potential of unstructured data analysis and we’re excited by the opportunity as an early mover in this young market. While we host some of these customers in the cloud, the majority prefer to install Squirro on-premise for security reasons.\nWe need you to help us build out and scale this platform, as our customers apply it to ever growing volumes of data and discover new ways to structure and analyse that data.\nRequired Qualifications\n\nExceptional programming experience in Python\nExtensive knowledge of UNIX/Linux from a developers perspective\nStrong track record in software systems design, from initial implementation to performance optimisation and scaling\nExperience developing professionally as part of a team, giving and receiving code reviews, test-driven development etc.\nGood communication skills with fluency in English\nSwiss citizenship or work permit in Switzerland, or living and working in UK, EU or EFTA member state. We’d love to hire people worldwide but Swiss immigration law makes this problematic except in rare cases.\n\nNice to Have\n\nBS, MS or PhD in Computer Science or related technical field\nExperience with information retrieval technologies (Elasticsearch, Lucene)\nComfortable working with large datasets and designing systems able to process and scale up to large data volumes\nFamiliarity with RESTful web services and microservices architectures\nExperience with MySQL, Redis, nginx, Zookeeper and other technologies in the Squirro stack\nFamiliarity with AWS, Terraform, Prometheus, Grafana, Ansible and other DevOps related tools\nAwareness of machine learning as applied to text analysis\n\nWorking with Us\nSquirro is a Swiss startup with an international flavour. Our team of passionate technology geeks and entrepreneurs mix local “Swissness” with American, German, French, Russian, Indian, Portuguese, Polish and British into an all-round startup team that combines the excellence of the ETH and EPFL with experience from technology companies such as Microsoft and Google as well as Swiss players such as local.ch and DeinDeal.\nWe love Python and ElasticSearch on the server side and JavaScript, backbone.js, React, D3 and more on the client side. We work with git, believe in testing, code reviews, continuous integration and continuous deployment. Our work is structured loosely around scrum with help from Jira and the Atlassian tool suite. We take design and user experience seriously and apply machine learning in the context of text analysis.\nMost of all we’re serious about building a world-class company and our compensation package includes shares because we believe our employees should be rewarded for their hard work and dedication.\nOur engineering office is in the heart of Zürich, with easy access to public transport.\n'}]
+        
+        self.jobLst=entry
         
         # create table if not exists
         # columns used for the primary key implicitly cannot be null
@@ -127,8 +165,8 @@ class data:
                                     VALUES (?,?,?,?,?,?,?,?)"""
             
             data_tuples = (self.jobLst[i]['Location'], self.jobLst[i]['Company'], 
-                           self.jobLst[i]['Time-Posted'], self.jobLst[i]['Page-Addr'], self.jobLst[i]['Contract-Type'], 
-                           self.jobLst[i]['Title'], self.jobLst[i]['Desc'], self.jobLst[i]['Apply-To'])
+                           self.jobLst[i]['Time-Posted'], self.jobLst[i]['Apply-To'], self.jobLst[i]['Contract-Type'], 
+                           self.jobLst[i]['Title'], self.jobLst[i]['Desc'],"")
 
             cursor.execute(insert_query, data_tuples)
 
@@ -137,22 +175,23 @@ class data:
         conn.close()
 
 
-    def search(self,term):
+    def searchJobs(self,term):
         'searches backend for whatever search term'
         results=[]
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        select_query = """select * from Users """        #change JOBS to whatever table you want to see
+        select_query = """select * from JOBS """        #change JOBS to whatever table you want to see
         cursor.execute(select_query)
         records = cursor.fetchall()
         cursor.close()
         conn.close()
         #term="Seeker"
-        term="Both"
         for i in range(len(records)):
+            print(records[0][0])
             if term in records[i]:
                 results.append(records[i])
-        return results
+                return records[i]
+        return records
         
 
     # returns tuple list of all records in jobs table sorted by the job title in ascending order
