@@ -31,6 +31,9 @@ mlKeys = ['data mining', 'machine learning', 'cnn', 'rbm',
 
 seKeys = ['software engineer', 'software development','code']
 
+keyWordEdu = ['masters', 'bachelors', "master's", "bachelor's", 'phd', 'undergrad', 'graduate', 'undergraduate', 'ged', "graduate's", "undergraduate's", "associate's", 'doctoral']
+
+
 
 # In[132]:
 
@@ -147,13 +150,21 @@ def getDict(url):
             catList.append('Software Engineer')
         elif otherCNT == mx: # consider difference of counts?
             catList.append('Other')
+                    
+                #Education
+        foundEdu = []
+        desc = desc.lower()
+        for x in desc.split():
+            if x in keyWordEdu:
+                foundEdu.append(x)
+        eduList.append(foundEdu)
             
     
     for i in range (0, len(titList)):
         allJobs.append(dict({'Company':coList[i], 'Location': locList[i], 
                              'Title': titList[i], 'Date Created': dateList[i], 
                              'Salary': payList[i], 'Link':linkList[i],'Skills': skillList[i], 
-                             'Description': descList[i], 'Category': catList[i]}))
+                             'Description': descList[i], 'Category': catList[i], 'Education': eduList[i]}))
 
 
 # In[136]:
