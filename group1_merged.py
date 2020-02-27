@@ -20,6 +20,7 @@ from urllib.request import urlopen
 
 class data:
     def __init__(self):
+        print("MAKE SURE VM MESSAGES ARE DELETED")
         #create table if not exists Jobs (jobTitle text, passWord text, userType text)
         #info given by user
         self.location="none"
@@ -52,7 +53,7 @@ class data:
     def db(self):
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        select_query = """select * from JOBS """
+        select_query = """select * from Users """        #change JOBS to whatever table you want to see
         cursor.execute(select_query)
         records = cursor.fetchall()
         cursor.close()
@@ -76,6 +77,7 @@ class data:
         'gathers basic info about jobs from github'
         r=requests.get(link)
         p=r.json()
+        return p
         temp=[]
         if p==[]:
             return self.listing
@@ -103,7 +105,6 @@ class data:
             self.jobLst.append(temp)
             link=link.replace(link[-1],str(self.cnt))
             return self.allocation(link)   
-        #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
 
     # TODO: remove function?
     # sends the data allocated to the database
@@ -134,23 +135,32 @@ class data:
         conn.commit()
         cursor.close()
         conn.close()
-        
-    # TODO: remove or fix? this won't do anything
-    def updateJobsTable(self):
+
+
+    def search(self,term):
+        'searches backend for whatever search term'
+        results=[]
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
-        #print("I")
         cursor = conn.cursor()
-        addColumn = "ALTER TABLE JOBS ADD COLUMN link text"
-        addColumn = "ALTER TABLE JOBS ADD COLUMN IDNUM int"
+        select_query = """select * from Users """        #change JOBS to whatever table you want to see
+        cursor.execute(select_query)
+        records = cursor.fetchall()
         cursor.close()
         conn.close()
+        #term="Seeker"
+        term="Both"
+        for i in range(len(records)):
+            if term in records[i]:
+                results.append(records[i])
+        return results
+        
 
     # returns tuple list of all records in jobs table sorted by the job title in ascending order
     def getAllJobs(self):
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        select_query = """select * from Jobs order by jobTitle ASC"""
+        select_query = """select * from JOBS order by jobTitle ASC"""
         cursor.execute(select_query)
         records = cursor.fetchall()
         cursor.close()
@@ -366,6 +376,11 @@ class data:
     # returns list of all jobs found
     # also returns links and other info
     def getJobLLP(self,loc, numPages):
+        
+        lst=[]
+        #r=requests.get("'https://jobs.github.com/positions?page=1")
+        #p=r.json()
+        
         multPageLocJobsWL = [] # will be populated with job dictionaries
         print("ENTERED GET_JOB_LLP")
         print('parameters: ', loc, ', ', numPages)
@@ -486,6 +501,7 @@ class data:
     # returns 4 pieces of the specified page
     #   [string:applyTo_link, list:skills, string:description, string:page_url]
     def getPageMeta(self, url):
+        foundEduList=[]
         newSrc = requests.get(url).text
         newSoup = BeautifulSoup(newSrc, 'lxml')
         
@@ -498,12 +514,9 @@ class data:
         #can add more keywords
         #keywordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
         foundSkillsList = []
-        
-
 
         summary = newSoup.find('div', class_='column main')
-        
-        sumtext = summary.text
+        sumtext = summary.text#got rid of .text bc gave attribute error
         sumtext = sumtext.lower()
         sumList = sumtext.split()
         
@@ -522,45 +535,8 @@ class data:
         return [jobLink, foundSkillsList, desc, url, foundEduList]
 
 
-# In[ ]:
 
 
-
-
-
-# In[80]:
-
-
-d=data()
-
-
-# In[59]:
-
-
-d.create()
-print(len(d.getAllJobs()))
-
-
-# In[57]:
-
-
-d.destroyJobs()
-
-
-# In[81]:
-
-
-d.getAllJobs()
-print(dict(d.getAllJobs()[0]))
-
-
-# In[82]:
-
-
-d.getNJobs(2, 6)
-
-
-# In[ ]:
 
 
 
