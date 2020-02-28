@@ -91,11 +91,30 @@ class data:
         conn.close()
         #term="Seeker"
         for i in range(len(records)):
-            print(records[0][0])
             if term in records[i]:
                 results.append(records[i])
-                return records[i]
-        return records
+        print(len(results))
+        print("DDD")
+        return results
+
+
+    def searchUsers(self,term):
+        'searches backend for whatever search term'
+        results=[]
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from Users """        #change JOBS to whatever table you want to see
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        #term="Seeker"
+        for i in range(len(records)):
+            if term in records[i]:
+                results.append(records[i])
+        return results
+
+    
         
 
     # returns tuple list of all records in jobs table sorted by the job title in ascending order
