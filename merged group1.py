@@ -90,9 +90,8 @@ class data:
             self.cnt+=1
             self.jobLst.append(temp)
             link=link.replace(link[-1],str(self.cnt))
-            return self.allocation(link)   
-        #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
-
+            return self.allocation(link)
+        
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self):
@@ -105,12 +104,13 @@ class data:
         conn.commit()
         
         for i in range(len(self.listing)):
+            print("entered insert to db") 
             insert_query = """insert into JOBS (location, company, datePosted, postUrl, 
                                                 jobType, jobTitle, jobDes, jobApp) 
                                     VALUES (?,?,?,?,?,?,?,?)"""
 
             
-            data_tuples = ("Job location", self.listing[i]['Company'], 
+            data_tuples = (self.listing[i]['Location'], self.listing[i]['Company'], 
                            self.listing[i]['Time-Posted'], "", self.listing[i]['Contract-Type'], 
                            self.listing[i]['Title'], self.listing[i]['Desc'], self.listing[i]['Apply-To'])
 
@@ -321,48 +321,53 @@ class data:
     # also returns links
     def getJobLLP(self,loc, numPages):
         multPageLocJobsWL = [] # will be populated with job dictionaries
-        print("III")
-        for i in range (0, numPages): # iterating over pages until numPages
-            loc = loc.replace(' ', '+')
-            url = 'https://jobs.github.com/positions' + '?page=' + str(i)
-            #resolvedURL = url + "?page=" + str(i)
-            finalURL = url + '&location='+ loc # including location in filters
+        try:
+            for i in range (0, numPages): # iterating over pages until numPages
+                loc = loc.replace(' ', '+')
+                url = 'https://jobs.github.com/positions' + '?page=' + str(i)
+                #resolvedURL = url + "?page=" + str(i)
+                finalURL = url + '&location='+ loc # including location in filters
 
-            #r=requests.get(finalURL)
-            #p=r.json()
-            
-            source = requests.get(finalURL).text
-            soup = BeautifulSoup(source, 'lxml')
-            
-            for job in soup.find_all('tr', {'class':'job'} ): # iterating over individual job data
+                #r=requests.get(finalURL)
+                #p=r.json()
                 
+                source = requests.get(finalURL).text
+                soup = BeautifulSoup(source, 'lxml')
                 
-                #link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href']) # get apply to link
-                tmp = job.text.strip().split('\n')
-                jb = {}
-                for x in range (0, len(tmp)):
-                    y = tmp[x].strip()
-                    if len(y) > 1 and not "\t" in y:
-                        if x == 0:
-                            jb['Title'] = y
-                        elif x == 1:
-                            jb['Company'] = y
-                        elif x == 2:
-                            jb['Contract-Type'] = y
-                        elif x == 3:
-                            jb['Location'] = y
-                        elif x == 4:
-                            jb['Time-Posted'] = y
-                        else:
-                            jb['Other'] = y
-                        
-                jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
-                jb['Apply-To'] = jobMeta[0]
-                jb['Skills'] = jobMeta[1]
-                jb['Desc'] = jobMeta[2]
+                for job in soup.find_all('tr', {'class':'job'} ): # iterating over individual job data
+                    
+                    
+                    #link = getLink(job.find('td', {'class':'title'}).find('h4').find('a')['href']) # get apply to link
+                    tmp = job.text.strip().split('\n')
+                    jb = {}
+                    for x in range (0, len(tmp)):
+                        y = tmp[x].strip()
+                        if len(y) > 1 and not "\t" in y:
+                            if x == 0:
+                                jb['Title'] = y
+                            elif x == 1:
+                                jb['Company'] = y
+                            elif x == 2:
+                                jb['Contract-Type'] = y
+                            elif x == 3:
+                                jb['Location'] = y
+                            elif x == 4:
+                                jb['Time-Posted'] = y
+                            else:
+                                jb['Other'] = y
                 
-                multPageLocJobsWL.append(jb)
-        return multPageLocJobsWL
+                    jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
+                    jb['Apply-To'] = jobMeta[0]
+                    jb['Skills'] = jobMeta[1]
+                    jb['Desc'] = jobMeta[2]
+                    
+                    multPageLocJobsWL.append(jb)
+                print("Page is"+str(i))
+            return multPageLocJobsWL
+        except KeyError:
+            print("key error")
+            pass
+        
             
     #makes a dictionary of the return of the url loc,co,time,title,type,skills (some dictionaries do not have skills if job didnt have any of the keyword skills)
     #runs on the first page only (no location specified) (doesnt go through multiple pages) url used ='https://jobs.github.com/positions'
@@ -407,7 +412,7 @@ class data:
     # TODO
     #going to be a list of dictionaries ***TBA
     #for now prints out several dictionaries for each job post on the page (50)
-    def create(self,loc = 'chicago', numPages = 1):
+    def create(self,loc, numPages):
         
         self.listing=self.getJobLLP (loc, numPages)
         self.testing()
