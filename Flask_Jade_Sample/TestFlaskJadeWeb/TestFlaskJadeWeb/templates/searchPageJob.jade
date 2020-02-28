@@ -3,8 +3,27 @@ extends layoutSeeker
 block content
 	h2 Search for Jobs
 	form(action='/jobFilter', method='post')
-		input.frogGreenBorder(name='jobFullSearch', placeholder='Search...')
+		input.frogGreenBorder(name='jobFullSearch', type='text', placeholder='Search...')
 		button.btn.btn-primary.frogGreen(name='ClearSearch', type='reset', value='RESETSEARCHCODE') Clear
+		//button.btn.btn-primary.frogGreen(name='UpdateFilters', type='submit', value='UpdateFilters') Update
+		
+		//br
+		//input.frogGreenBorder(style='margin:8px 0px', type='text', placeholder='Location', name='Location')
+		//input.frogGreenBorder(style='margin:8px 0px', type='text', placeholder='Pay', name='Pay')
+		
+		//br
+		//div(style='display:inline-block; margin:8px 0px; margin-right: 8px')
+		//	span Full Time
+		//	label.checkbox-label
+		//		input(type="checkbox", value='Full', name='FullTime')
+		//		span.checkbox-custom.rectangular.frogGreenBorder
+
+		//div(style='display:inline-block; margin:8px 0px')
+		//	span Part Time
+		//	label.checkbox-label
+		//		input(type="checkbox", value='Part', name='PartTime')
+		//		span.checkbox-custom.rectangular.frogGreenBorder
+		
 		br
 		span Active Filters: #{FiltersDesc}
 	hr
@@ -46,13 +65,13 @@ block content
 				label.checkbox-label
 					input(type="checkbox", value='Full', name='FullTime')
 					span.checkbox-custom.rectangular.frogGreenDarkBorder
-
+	
 			div(style='display:flex; margin-bottom:8px')
 				span Part Time
 				label.checkbox-label
 					input(type="checkbox", value='Part', name='PartTime')
 					span.checkbox-custom.rectangular.frogGreenDarkBorder
-
+	
 			button.btn.btn-primary.center.frogGreen(
 				style='margin:0% 1%; border: 2px solid #6D9984!important;', 
 				type='submit', 

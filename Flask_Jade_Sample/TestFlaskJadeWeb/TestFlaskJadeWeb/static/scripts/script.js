@@ -24,9 +24,9 @@ function loadItems() {
                 //template_clone.querySelector("#postLink")["href"] =
                 //   Flask.url_for('jobPage', { cnt: `${data[i][0]}`});
 
-                template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['Title']}`;
-                template_clone.querySelector("#company").innerHTML = `${data[i][1]['Company']}`;
-                template_clone.querySelector("#location").innerHTML = `${data[i][1]['Location']}` + ', ';
+                template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['jobTitle']}`;
+                template_clone.querySelector("#company").innerHTML = `${data[i][1]['company']}`;
+                template_clone.querySelector("#location").innerHTML = `${data[i][1]['location']}` + ', ';
                 template_clone.querySelector("#pay").innerHTML = `${data[i][1]['Salary']}`;
                 // Append template to dom
                 scroller.appendChild(template_clone);

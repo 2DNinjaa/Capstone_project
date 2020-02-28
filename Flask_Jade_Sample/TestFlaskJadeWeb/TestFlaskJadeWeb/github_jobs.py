@@ -46,7 +46,7 @@ class data:
 
     #Function to just view the users table
     def db(self):
-        conn = sqlite3.connect("../Users.db")
+        conn = sqlite3.connect("Users.db")
         cursor = conn.cursor()
         select_query = """select * from JOBS """
         cursor.execute(select_query)
@@ -104,7 +104,7 @@ class data:
     # TODO: remove function?
     # sends the data allocated to the database
     def testing(self, jobs):
-        conn = sqlite3.connect("../Users.db")
+        conn = sqlite3.connect("Users.db")
         cursor = conn.cursor()
         
         # create table if not exists
@@ -133,7 +133,7 @@ class data:
 
     # TODO: remove or fix? this won't do anything
     def updateJobsTable(self):
-        conn = sqlite3.connect("../Users.db")
+        conn = sqlite3.connect("Users.db")
         #print("I")
         cursor = conn.cursor()
         addColumn = "ALTER TABLE JOBS ADD COLUMN link text"
@@ -143,12 +143,14 @@ class data:
 
     # returns tuple list of all records in jobs table sorted by the job title in ascending order
     def getAllJobs(self):
-        conn = sqlite3.connect("../Users.db")
+        conn = sqlite3.connect("Users.db")
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        select_query = """select * from Jobs order by jobTitle ASC"""
+
+        select_query = """select * from JOBS order by jobTitle ASC"""
         cursor.execute(select_query)
         records = cursor.fetchall()
+        
         cursor.close()
         conn.close()
         return [dict(row) for row in records]
@@ -156,7 +158,7 @@ class data:
     # returns tuple list of jobs starting from the offset and getting as many as amount
     # 0 based indexing means offset at 1 will start at second index
     def getNJobs(self, offset, amt):
-        conn = sqlite3.connect("../Users.db")
+        conn = sqlite3.connect("Users.db")
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
@@ -166,11 +168,25 @@ class data:
         cursor.close()
         conn.close()
         
-        return [dict(row) for row in records[offset:offset+amt]]
+        return [[records.index(row), dict(row)] for row in records[offset:offset+amt]]
+
+    # returns a single job as a dictionary based on its index when sorting by title
+    def getNthJob(self, n):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = """select * from Jobs order by jobTitle ASC"""
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        return [dict(row) for row in records][int(n)]
 
     # deletes the jobs table entirely
     def destroyJobs(self):
-        conn = sqlite3.connect("../Users.db")
+        conn = sqlite3.connect("Users.db")
         cursor = conn.cursor()
         table_query = 'DROP TABLE JOBS'
         cursor.execute(table_query)

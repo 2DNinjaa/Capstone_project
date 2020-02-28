@@ -152,39 +152,54 @@ def jobPage(cnt):
     #print(allJobs[int(cnt)])
     #print(allJobs[int(cnt)][1])
     #print('-- END TEST --')
+
+    job = data().getNthJob(cnt)
+
     return render_template(
         'pageJob.jade',
-        title = session['allJobs'][int(cnt)][1]['Title'],
-        jobTitle = session['allJobs'][int(cnt)][1]['Title'],
-        jobCompany = session['allJobs'][int(cnt)][1]['Company'],
-        jobContract = session['allJobs'][int(cnt)][1]['Contract-Type'],
-        jobLoc = session['allJobs'][int(cnt)][1]['Location'],
-        jobDesc = session['allJobs'][int(cnt)][1]['Desc'],
-        applyTo = session['allJobs'][int(cnt)][1]['Apply-To'],
-        pay = session['allJobs'][int(cnt)][1]['Salary']
+        title = job['jobTitle'],
+        jobTitle = job['jobTitle'],
+        jobCompany = job['company'],
+        jobContract = job['jobType'],
+        jobLoc = job['location'],
+        jobDesc = job['jobDes'],
+        applyTo = job['jobApp'],
+        pay = job['Salary']
     )
 
 @app.route('/load')
 def load():
     counter = int(request.args.get("c"))  # The 'counter' value sent in the QS
-    #print('LEN JOBS: ', len(filteredJobs))
-    session['offset'] += counter
+    session['offset'] = counter
 
-    if counter == 0:
-        print(f"Returning posts 0 to {quantity}")
-        # Slice 0 -> quantity from the allJobs
-        res = make_response(jsonify(session['filteredJobs'][0: quantity]), 200)
-
-    elif counter == posts:
+    d = data()
+    #print("num jobs: ", len(d.getAllJobs()))
+    print(session['offset'])
+    
+    if counter < posts:
+        print(f"2) Returning posts {counter} to {counter + quantity}")
+        res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
+    else:
         print("No more posts")
         res = make_response(jsonify({}), 200)
 
-    else:
-        print(f"Returning posts {counter} to {counter + quantity}")
-        # Slice counter -> quantity from the allJobs
-        res = make_response(jsonify(session['filteredJobs'][counter: counter + quantity]), 200)
-        #https://pythonise.com/categories/javascript/infinite-lazy-loading#the-example
-        #https://www.youtube.com/watch?v=AuBai920D0E
+    #if counter == 0:
+    #    print(f"1) Returning posts 0 to {quantity}")
+    #    # Slice 0 -> quantity from the allJobs
+    #    #res = make_response(jsonify(session['filteredJobs'][0: quantity]), 200)
+    #    res = make_response (jsonify (d.getNJobs(0, 10)), 200)
+
+    #elif counter == posts:
+    #    print("No more posts")
+    #    res = make_response(jsonify({}), 200)
+
+    #else:
+    #    print(f"2) Returning posts {counter} to {counter + quantity}")
+    #    # Slice counter -> quantity from the allJobs
+    #    #res = make_response(jsonify(session['filteredJobs'][counter: counter + quantity]), 200)
+    #    res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
+    #    #https://pythonise.com/categories/javascript/infinite-lazy-loading#the-example
+    #    #https://www.youtube.com/watch?v=AuBai920D0E
     return res
 
 @app.route('/jobSearch') # routes from menu links
@@ -230,7 +245,7 @@ def jobFilter():
     filtersDict = None if all(val == '~~' for val in filtersDict.values()) else filtersDict
     print(filtersDict)
 
-    session['allJobs'] = []
+    #session['allJobs'] = []
     if request.form.get('jobFullSearch', '').lower() == 'all':
         searchJobs('ALL JOBS', None)
 
