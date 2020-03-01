@@ -12,6 +12,7 @@ from TestFlaskJadeWeb.models.factory import create_repository
 from TestFlaskJadeWeb.settings import REPOSITORY_NAME, REPOSITORY_SETTINGS
 
 from .github_jobs import *
+from .PlotlyGraphs import *
 
 import sqlite3
 import requests
@@ -120,11 +121,19 @@ def logout():
 @app.route('/tmpGraph')
 def graph():
     """Renders the temp graph page"""
+    port_to_csv()
     return render_template(
         'tmpGraph.jade',
         title="Graph",
         year=datetime.now().year,
+        src=s_modular(request.form.get('GraphType', ''), '')
     )
+
+@app.route('/graphOptions', methods=['POST'])
+def graphOptions():
+    return render_template('tmpGraph.jade', title = 'Graph', 
+                           src = s_modular(request.form.get('GraphType', ''), '', 
+                                           request.form.get('xAxis', ''), request.form.get('yAxis', '')))
 
 @app.route('/contact')
 def contact():
@@ -147,14 +156,7 @@ def about():
 
 @app.route('/jobPage/<cnt>')
 def jobPage(cnt):
-    #print('-- TEST JOB LOAD --')
-    #print(cnt)
-    #print(allJobs[int(cnt)])
-    #print(allJobs[int(cnt)][1])
-    #print('-- END TEST --')
-
     job = data().getNthJob(cnt)
-
     return render_template(
         'pageJob.jade',
         title = job['jobTitle'],
@@ -164,7 +166,7 @@ def jobPage(cnt):
         jobLoc = job['location'],
         jobDesc = job['jobDes'],
         applyTo = job['jobApp'],
-        pay = job['Salary']
+        pay = job['salary']
     )
 
 @app.route('/load')

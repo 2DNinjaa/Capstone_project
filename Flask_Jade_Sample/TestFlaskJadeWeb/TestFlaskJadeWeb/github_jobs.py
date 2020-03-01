@@ -20,15 +20,13 @@ from urllib.request import urlopen
 
 class data:
     def __init__(self):
-        #create table if not exists Jobs 
+        #create table if not exists Jobs (jobTitle text, passWord text, userType text)
         #info given by user
         self.location="none"
         self.jobType="no type"
         self.skills=[]
         self.exp="none"
         self.edu="none"
-
-        self.cnt=1
         
         #info given by api
         self.age=[]#how old is the job listing
@@ -39,105 +37,48 @@ class data:
         self.listing=[]
         
         # keywords used in skill identification
-        self.keyWordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
+        self.keyWordSkills = ['python', 'java', 'c++', 'sql', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end', 'html', 'css','json', 'xml','api', 'linux', 'nodejs', 'c#', 'spark', 'sas', 'matlab', 'excel', 'spark', 'hadoop', 'azure', 'spss', 'git', 'aws']
+        self.keyWordEdu = ['masters', 'bachelors', "master's", "bachelor's", 'phd', 'undergrad', 'graduate', 'undergraduate', 'ged', "graduate's", "undergraduate's", "associate's", 'doctoral']
+        self.aiKeys = ['ai', 'a.i.', 'artificial intelligence', 'artificial']
+        self.dlKeys= ['deep learning', 'neural networks', 'big data', 'deep', 'statistics']
+        self.mlKeys = ['data mining', 'machine learning', 'cnn', 'rbm', 'machine', 'natural language', 'regression', 'fault diagnosis', 'intrusion detection']
+        self.seKeys = ['software engineer', 'software development','code']
         
     def __repr__(self):
         return self.exp
-
-    #Function to just view the users table
-    def db(self):
-        conn = sqlite3.connect("Users.db")
-        cursor = conn.cursor()
-        select_query = """select * from JOBS """
-        cursor.execute(select_query)
-        records = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return records
-
-    # sets global variables to be fed for the front end
-    # user info should be sent back in a standardized list
-    def userInfo(self,info):
-        self.location=info[0]
-        self.jobType=info[1]
-        self.skills=info[2]
-        self.exp=info[3]
-        self.edu=info[4]
-        print(self.edu)
-        #return sender # TODO: build list?
     
-    # gather job info
-    # TODO: remove?
-    def allocation(self,link):
-        'gathers basic info about jobs from github'
-        r=requests.get(link)
-        p=r.json()
-        temp=[]
-        if p==[]:
-            return self.listing
-        
-        for i in range(len(p)):
-            company=p[i]['company'][:] # TODO: remove [:] ? 
-            jobLocation=p[i]['location'][:]
-            jobType=p[i]["type"]
-            jobTitle=p[i]["title"]
-            time=p[i]["created_at"][4:11]+p[i]["created_at"][24:28]
-            temp.append(company)
-            temp.append(jobLocation)
-            temp.append(jobType)
-            temp.append(jobTitle)
-            temp.append(time)
-            
-        if self.cnt>=10 and self.cnt<100:
-            self.cnt+=1
-            self.jobLst.append(temp)
-            link=link.replace(link[-2:],cnt)
-            return self.allocation(link)
-        else:
-            print("entered into else" +str(self.cnt))
-            self.cnt+=1
-            self.jobLst.append(temp)
-            link=link.replace(link[-1],str(self.cnt))
-            return self.allocation(link)   
-        #return self.testing(jobLocation,company,time,url,jobType,jobTitle,jobDes,app)
-
-    # TODO: remove function?
     # sends the data allocated to the database
-    def testing(self, jobs):
-        conn = sqlite3.connect("Users.db")
+    def testing(self, allJobs):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         
         # create table if not exists
+        # columns used for the primary key implicitly cannot be null
+        # columns skills and education are comma separated string representations of lists
         table_query = """create table if not exists JOBS
                             (location text, company text, datePosted text, postUrl text, 
-                            jobType text, jobTitle text, jobDes text, jobApp text, 
-                            PRIMARY KEY (company, jobTitle))"""
+                            jobType text, jobTitle text, jobDes text, jobApp text, salary text,
+                            skills text, category text, education text,
+                            PRIMARY KEY (company, jobTitle, location))"""
         cursor.execute(table_query)
         conn.commit()
         
-        for i in range(len(self.jobLst)):
+        for i in range(len(allJobs)):
             insert_query = """insert or ignore into JOBS (location, company, datePosted, postUrl, 
-                                                jobType, jobTitle, jobDes, jobApp) 
-                                    VALUES (?,?,?,?,?,?,?,?)"""
+                                                jobType, jobTitle, jobDes, jobApp, salary, skills,
+                                                category, education) 
+                                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"""
             
-            data_tuples = (jobs[i]['Location'], jobs[i]['Company'], 
-                           jobs[i]['Time-Posted'], jobs[i]['Page-Addr'], jobs[i]['Contract-Type'], 
-                           jobs[i]['Title'], jobs[i]['Desc'], jobs[i]['Apply-To'])
-
+            #print(self.jobLst[i]['Skills'])
+            data_tuples = (allJobs[i]['Location'], allJobs[i]['Company'], 
+                           allJobs[i]['Time-Posted'], allJobs[i]['Page-Addr'], 
+                           allJobs[i]['Contract-Type'], allJobs[i]['Title'], 
+                           allJobs[i]['Desc'], self.jobLst[i]['Apply-To'], allJobs[i]['Salary'],
+                           lst_to_str(allJobs[i]['Skills']), allJobs[i]['Category'], lst_to_str(allJobs[i]['Education']))
 
             cursor.execute(insert_query, data_tuples)
 
         conn.commit()
-        cursor.close()
-        conn.close()
-
-    # TODO: remove or fix? this won't do anything
-    def updateJobsTable(self):
-        conn = sqlite3.connect("Users.db")
-        #print("I")
-        cursor = conn.cursor()
-        addColumn = "ALTER TABLE JOBS ADD COLUMN link text"
-        addColumn = "ALTER TABLE JOBS ADD COLUMN IDNUM int"
         cursor.close()
         conn.close()
 
@@ -192,34 +133,8 @@ class data:
         cursor.execute(table_query)
         cursor.close()
         conn.close()
-    
-    def getOwnListing(self):
-        return self.listing
-    
-
-
-
-
-
-
-
 
 ###CAN CHANGE TO RUN LINKS THROUGH METHODS (have links as method parameters)
-
-    #prints links of positions by location (city or state)
-    def getLocationLinks(self,local):
-        loc = local.replace(' ', '+')
-        url = 'https://jobs.github.com/positions?utf8=%E2%9C%93&description=&location=' + loc
-        source = requests.get(url).text
-        soup = BeautifulSoup(source, 'lxml')
-
-        locationLinks = []
-        for link in soup.find_all('a'):
-            links = link.get('href')
-            if "http" in links and '/positions/' in links:
-                locationLinks.append(links)
-        return locationLinks
-
 
     #returns list of links of positions without location specification 
     def onlylinks(self):
@@ -234,158 +149,18 @@ class data:
                #print (links)
                 linklist.append(link['href'])
         return linklist
-
-
-    #prints links for positions through page x
-    def linksMultPages(self,x):
-        for i in range (1,x):
-            url = 'https://jobs.github.com/positions'
-            finalurl = url + "?page=" + str(i)
-            source = requests.get(url).text
-            soup = BeautifulSoup(source, 'lxml')
-            
-            for link in soup.find_all('a'):
-                links = link.get('href')
-                if "http" in links and '/positions/' in links:
-                    print (links) # TODO: replace with return?
-
-
-    #prints links for positions through page x in location loc
-    #for this website there usually isnt multiple pages so this might not be necessary.
-    def linksMultPagesLoc(self,x, loc):
-        url = 'https://jobs.github.com/positions'
-        loc = loc.replace(' ', '+')
-        for i in range (1,x):
-            finalurl = url + "?page=" + str(i) + loc
-            source = requests.get(url).text # TODO: should this say finalurl not url?
-            soup = BeautifulSoup(source, 'lxml')
-            
-            for link in soup.find_all('a'):
-                links = link.get('href')
-                if "http" in links and '/positions/' in links:
-                    print (links) # TODO: replace with return?
-
-
-
-    #prints out all job titles, locations, company, and fulltime or not full time
-    def PositionList(self):
-        source = requests.get('https://jobs.github.com/positions').text
-        soup = BeautifulSoup(source, 'lxml')
-
-        for pos in soup.find_all('table', class_='positionlist'):
-            desc = pos.text
-            print (desc) # TODO: replace with return?
-
-
-    #returns list of the titles of all the positions on the page    
-    def positionNamesOnly(self):
-        pnames = []
-        source = requests.get('https://jobs.github.com/positions').text
-        soup = BeautifulSoup(source, 'lxml')
-
-        for pos in soup.find_all('tr', class_='job'):
-            name = pos.td.h4.text
-            #print (name)
-            pnames.append(name)
-        return (pnames)
-
-
-    #returns list of the company names 
-    def company(self):
-        cos = []
-        source = requests.get('https://jobs.github.com/positions').text
-        soup = BeautifulSoup(source, 'lxml')
-
-        for co in soup.find_all('a', class_='company'):
-            coname = co.text
-            #print (coname)
-            cos.append(coname)
-            
-        return (cos)
-
-
-    #returns list of the locations
-    def getLocation(self):
-        locs = []
-        source = requests.get('https://jobs.github.com/positions').text
-        soup = BeautifulSoup(source, 'lxml')
-
-        for pos in soup.find_all('span', class_='location'): #td, meta
-            loc = pos.text
-            #print (loc)
-            locs.append(loc)
-        return (locs)
-
-    #returns list of the times created
-    def timeCreated(self):
-        tcr = []
-        source = requests.get('https://jobs.github.com/positions').text
-        soup = BeautifulSoup(source, 'lxml')
-
-        for pos in soup.find_all('span', class_='when relatize relatized'):
-            time = pos.text
-            tcr.append(time)
-        return (tcr)
-
-    #returns list of full/parttime
-    def FullTime(self):
-        ft = []
-        source = requests.get('https://jobs.github.com/positions').text
-        soup = BeautifulSoup(source, 'lxml')
-
-        for pos in soup.find_all('strong', class_='fulltime'):
-            time = pos.text
-            ft.append(time)
-        return (ft)
-        
-    #returns list of the skills found (as part of the preset skill list) and creates a list for those skills found
-    def getSkills(self,link):
-        #can add more keywords
-        #keyWordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
-        foundSkillsList = []
-        
-        url = link
-        src = requests.get(url).text
-        soup = BeautifulSoup(src, 'lxml')
-
-        summary = soup.find('div', class_='column main')
-        #print (summary)
-        sumtext = summary.text
-        sumList = sumtext.split()
-        #print ('====================================')
-
-        for i in self.keyWordSkills:
-            if i in sumList:
-                foundSkillsList.append(i)
-                #print('found skill!!  ' + i)
-                
-        return foundSkillsList
-
-
-    #goes through multiple pages using getSkillS
-    def findallSkills(self):
-        urls = []
-        #30 just sample
-        for i in range (1,30):
-            url ='https://jobs.github.com/positions'
-            finalurl = url + "?page=" + str(i)
-            urls.append(finalurl)
-
-        for x in urls:  #add print?
-            getSkills(x)
             
     # searches multiple pages and the given location
     # returns list of all jobs found
     # also returns links and other info
-    def getJobLLP(self,loc, numPages):
+    def hubJobs(self, jobX, loc, numPages):
+        print('entering github jobs')
         multPageLocJobsWL = [] # will be populated with job dictionaries
-        print("ENTERED GET_JOB_LLP")
-        print('parameters: ', loc, ', ', numPages)
         for i in range (0, numPages): # iterating over pages until numPages
-            loc = loc.replace(' ', '+')
-            url = 'https://jobs.github.com/positions' + '?page=' + str(i)
-            #resolvedURL = url + "?page=" + str(i)
-            finalURL = url + '&location='+ loc # including location in filters
+            loc = '' if loc == '' else ('&location=' + loc.replace(' ', '+'))
+            jobX = '' if jobX == '' else ('&description=' + jobX.replace(' ', '+'))
+            finalURL = 'https://jobs.github.com/positions?utf8=✓' + loc + '&page=' + str(i) + jobX
+            #finalURL = url + loc # including location in filters
             
             source = requests.get(finalURL).text
             soup = BeautifulSoup(source, 'lxml')
@@ -411,112 +186,170 @@ class data:
                         elif x == 8:
                             jb['Time-Posted'] = y
                         
+                jb['Salary'] = 'N/A' # salary not listed on github
                 jobMeta = self.getPageMeta (job.find('td', {'class':'title'}).find('h4').find('a')['href']) # gets job info (applyto link and skills)
                 jb['Apply-To'] = jobMeta[0]
                 jb['Skills'] = jobMeta[1]
                 jb['Desc'] = jobMeta[2]
                 jb['Page-Addr'] = jobMeta[3]
+                jb['Education'] = jobMeta[4]
+                jb['Category'] = jobMeta[5]
                 
                 multPageLocJobsWL.append(jb)
+                
+        print('github jobs length ', len(multPageLocJobsWL))
         return multPageLocJobsWL
-            
-    #makes a dictionary of the return of the url loc,co,time,title,type,skills (some dictionaries do not have skills if job didnt have any of the keyword skills)
-    #runs on the first page only (no location specified) (doesnt go through multiple pages) url used ='https://jobs.github.com/positions'
-    #the try/excepts are there because some jobs do not have those fields specified in a normal way
-    def makeDict(self,x):
-        Dict = {}
-        companyList = company()
-        locList = location()
-        TitleList = positionNamesOnly()
-        times = []
-        try:
-            times = timeCreated()
-        except:
-            pass
-            
-        full = FullTime()
-        links = onlylinks()
-        jobSkills = []
-        
-        try:
-            jobSkills = getSkills(links[x])
-            #print (jobSkills)
-        except:
-            pass
-        
-        #print (locList)
-        
-        try:
-            Dict = dict({'Company': companyList[x], 'Location': locList[x], 'Title': TitleList[x], 'Time Created': times[x], 'Type': full[x]})
-        except:
-            pass
-
-        try: #it is only adding first skill found, not sure why --->this might be messing it up actually some returns only give skills
-            if (len(jobSkills) > 0):
-                Dict.update({'Skills': jobSkills})
-        except:
-            pass
-
-        return (Dict)
-
 
     # TODO
     #going to be a list of dictionaries ***TBA
     #for now prints out several dictionaries for each job post on the page (50)
-    def create(self, loc = 'chicago', numPages = 1):
-        
-        #jobs = self.getJobLLP (loc, numPages)
-        self.testing(self.getJobLLP (loc, numPages))
+    def create(self, job = '', loc = '', numPages = 1):
+        self.testing(self.getJobLLP (loc, numPages) + self.indeedJobs(job, loc, numPages))
         print("create done")
-        #return jobs 
-
-
-    # helper function for getJobWLnks
-    # assumes url is a job page on the github jobs api
-    # returns the link where the user can apply to the company
-    # or this page (as specified by url) if none provided
-    # do not use, redundant
-    def getLink(self,url): # don't call this?
-        newSrc = requests.get(url).text
-        newSoup = BeautifulSoup(newSrc, 'lxml')
-        jobLink = newSoup.find('div', {'class':'highlighted'}).find('a')
-        return url if jobLink == None else jobLink['href']
-
 
     # returns 4 pieces of the specified page
-    #   [string:applyTo_link, list:skills, string:description, string:page_url]
+    #   [string:applyTo_link, list:skills, string:description, string:page_url, list:education]
     def getPageMeta(self, url):
         newSrc = requests.get(url).text
         newSoup = BeautifulSoup(newSrc, 'lxml')
         
+        # apply-to link
         jobLink = ''
         try:
             jobLink = newSoup.find('div', {'class':'highlighted'}).find('a')['href']
         except:
             jobLink = url
         
-        #can add more keywords
-        #keywordSkills = ['python', 'java', 'C++', 'SQL', 'manage', 'javascript', 'linux', 'team', 'problem solving', 'front end', 'back end']
         foundSkillsList = []
+        foundEduList = []
+
+        # parsing summary
+        summary = newSoup.find('div', class_=['column main', 'jobsearch-jobDescriptionText'])
+        sumtext = summary.text if not summary == None else 'N/A'
+        sumtext1 = sumtext.lower()
+        sumList = sumtext1.split()
         
-        #url = link
-        #src = requests.get(url).text
-        #soup = BeautifulSoup(src, 'lxml')
-
-        summary = newSoup.find('div', class_='column main')
-        #print (summary)
-        sumtext = summary.text
-        sumList = sumtext.split()
-        #print ('====================================')
-
+        # education
+        for i in self.keyWordEdu:
+            if i in sumList and not i in foundEduList:
+                foundEduList.append(i)
+                
+        # skills
         for i in self.keyWordSkills:
-            if i in sumList:
+            if i in sumList and not i in foundSkillsList:
                 foundSkillsList.append(i)
-                #print('found skill!!  ' + i)
-        #finalLink = url if jobLink == None else jobLink['href']
         
-        desc = newSoup.find('div', class_='column main').text
+        # primitive text classification
+        # sums up occurunces of keywords and then appends the category tag associated with the highest count
+        cat = ''
+        aiCNT = 0
+        dlCNT = 0
+        mlCNT = 0
+        seCNT = 0
+        otherCNT = 0
+        for x in sumList:
+            if x in self.aiKeys:
+                aiCNT += 1
+                continue
+            elif x in self.dlKeys:
+                dlCNT += 1
+                continue
+            elif x in self.mlKeys:
+                mlCNT += 1
+                continue
+            elif x in self.seKeys:
+                seCNT += 1
+                continue
+                
+        mx = max(aiCNT, dlCNT, mlCNT, seCNT, otherCNT)
+        if aiCNT == mx:
+            cat = 'Artificial Intelligence'
+        elif dlCNT == mx:
+            cat = 'Deep Learning'
+        elif mlCNT == mx:
+            cat = 'Machine Learning'
+        elif seCNT == mx:
+            cat = 'Software Engineer'
+        elif otherCNT == mx: # consider difference of counts?
+            cat = 'Other'
         
-        return [jobLink, foundSkillsList, desc, url]
+        return [jobLink, foundSkillsList, sumtext, url, foundEduList, cat]
+
+    ### Indeed ###
+    
+    # gets a list of dictionaries limited by the input parameters through indeed
+    def indeedJobs(self, job, location, maxPages):
+        print('entering indeed jobs')
+        baseLink = 'https://www.indeed.com/'
+        webAddr = baseLink + ('' if job == '' else 'jobs?q=' + job.replace (' ', '+'))
+        webAddr = webAddr + ('' if location == '' else '&l=' + location) + '&start=0'
+
+        jbPages = []
+        for x in range(0, maxPages):
+            link=webAddr.replace(webAddr[-1], str(x))
+            #jbPages.append(self.getDictNew(link))
+            source = requests.get(link).text
+            soup = BeautifulSoup(source, 'lxml')
+
+            for div in soup.find_all ('div', class_='row', attrs={'class':'row'}):
+                linkElem = div.find('div', class_='title').a
+                title = linkElem.get('title') # TITLE
+                link = "https://www.indeed.com" + linkElem.get('href')   # LINK
+
+                payRAW = div.find(name='span', class_=['salaryText', 'sjcl', 'salary'])
+                pay = payRAW.text.replace('\n', '') if not payRAW == None else 'N/A' # salary
+
+                co = div.find(name='span', class_=['company', 'result-link-source']).text.strip() # company
+                loc = div.find(['div', 'span'], attrs={'class': 'location'}).text # location
+                date = div.find('span', attrs={'class': 'date'}).text # date
+
+                jobMeta = self.getPageMeta(link)
+                newDict = {
+                    'Company':co, 'Location':loc, 'Title':title, 
+                    'Time-Posted':date, 'Salary':pay, 'Link':link,
+                    'Contract-Type':'N/A'
+                }
+                newDict['Apply-To'] = jobMeta[0]
+                newDict['Skills'] = jobMeta[1]
+                newDict['Desc'] = jobMeta[2]
+                newDict['Page-Addr'] = jobMeta[3]
+                newDict['Education'] = jobMeta[4]
+                newDict['Category'] = jobMeta[5]
+
+                jbPages.append(newDict)
+        
+        print('indeed jobs length ', len(jbPages))
+        return jbPages
+    
+    # TODO: delete this
+    def getDictNew(self, url):
+        source = requests.get(url).text
+        soup = BeautifulSoup(source, 'lxml')
+
+        tmpLst = []
+        for div in soup.find_all ('div', class_='row', attrs={'class':'row'}):
+            linkElem = div.find('div', class_='title').a
+            title = linkElem.get('title') # TITLE
+            link = "https://www.indeed.com" + linkElem.get('href')   # LINK
+
+            payRAW = div.find(name='span', class_=['salaryText', 'sjcl', 'salary'])
+            pay = payRAW.text.replace('\n', '') if not payRAW == None else 'N/A' # salary
+
+            co = div.find(name='span', class_=['company', 'result-link-source']).text.strip() # company
+            loc = div.find(['div', 'span'], attrs={'class': 'location'}).text # location
+            date = div.find('span', attrs={'class': 'date'}).text # date
+            
+            jobMeta = self.getPageMeta(link)
+            newDict = {
+                'Company':co, 'Location':loc, 'Title':title, 'Time-Posted':date, 'Salary':pay, 'Link':link
+            }
+            newDict['Apply-To'] = jobMeta[0]
+            newDict['Skills'] = jobMeta[1]
+            newDict['Desc'] = jobMeta[2]
+            newDict['Page-Addr'] = jobMeta[3]
+            newDict['Education'] = jobMeta[4]
+            
+            tmpLst.append(newDict)
+        return tmpLst
 
 

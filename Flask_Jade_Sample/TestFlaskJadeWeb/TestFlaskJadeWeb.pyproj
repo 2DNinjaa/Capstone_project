@@ -28,6 +28,7 @@
   <ItemGroup>
     <Compile Include="runserver.py" />
     <Compile Include="TestFlaskJadeWeb\github_jobs.py" />
+    <Compile Include="TestFlaskJadeWeb\PlotlyGraphs.py" />
     <Compile Include="TestFlaskJadeWeb\__init__.py" />
     <Compile Include="TestFlaskJadeWeb\settings.py" />
     <Compile Include="TestFlaskJadeWeb\views.py" />

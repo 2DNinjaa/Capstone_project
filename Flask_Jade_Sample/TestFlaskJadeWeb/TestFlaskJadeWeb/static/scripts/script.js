@@ -27,7 +27,7 @@ function loadItems() {
                 template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['jobTitle']}`;
                 template_clone.querySelector("#company").innerHTML = `${data[i][1]['company']}`;
                 template_clone.querySelector("#location").innerHTML = `${data[i][1]['location']}` + ', ';
-                template_clone.querySelector("#pay").innerHTML = `${data[i][1]['Salary']}`;
+                template_clone.querySelector("#pay").innerHTML = `${data[i][1]['salary']}`;
                 // Append template to dom
                 scroller.appendChild(template_clone);
 

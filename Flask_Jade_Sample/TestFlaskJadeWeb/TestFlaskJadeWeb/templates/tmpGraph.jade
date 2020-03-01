@@ -1,5 +1,27 @@
 extends layoutSeeker
 
 block content
-    iframe(id='igraph', scrolling='no', style='border:none', seamless='seamless', src="https://plot.ly/~lbecker7/6.embed", height="525", width='100%')
+    iframe(id='igraph', scrolling='no', style='border:none', seamless='seamless', src='#{src}', height="525", width='100%')
+    //br
+    form(action='/graphOptions', method='post')
+        div
+            span X-Axis:
+            select(name='xAxis')
+                option(value='salary') Salary
+                option(value='location') Location
+                option(value='company') Company
+
+            span Y-Axis:
+            select(name='yAxis')
+                option(value='salary') Salary
+                option(value='location') Location
+                option(value='company') Company
+
+            br
+            span Select type of graph:
+            button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Scatter') Scatter
+            button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Pie') Pie
+            button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Bar') Bar
+
     br
+    //iframe(id='igraph', scrolling='no', style='border:none', seamless='seamless', src=#{src}, height='525', width='100%')
