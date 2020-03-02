@@ -180,33 +180,20 @@ def load():
     
     if counter < posts:
         print(f"2) Returning posts {counter} to {counter + quantity}")
-        res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
+
+        if session.get('search', None) == None:
+            res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
+        else:
+            res = make_response (jsonify (d.getNJobsByQuery(session['search'], session['column'], session['offset'], 10)), 200)
     else:
         print("No more posts")
         res = make_response(jsonify({}), 200)
 
-    #if counter == 0:
-    #    print(f"1) Returning posts 0 to {quantity}")
-    #    # Slice 0 -> quantity from the allJobs
-    #    #res = make_response(jsonify(session['filteredJobs'][0: quantity]), 200)
-    #    res = make_response (jsonify (d.getNJobs(0, 10)), 200)
-
-    #elif counter == posts:
-    #    print("No more posts")
-    #    res = make_response(jsonify({}), 200)
-
-    #else:
-    #    print(f"2) Returning posts {counter} to {counter + quantity}")
-    #    # Slice counter -> quantity from the allJobs
-    #    #res = make_response(jsonify(session['filteredJobs'][counter: counter + quantity]), 200)
-    #    res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
-    #    #https://pythonise.com/categories/javascript/infinite-lazy-loading#the-example
-    #    #https://www.youtube.com/watch?v=AuBai920D0E
     return res
 
 @app.route('/jobSearch') # routes from menu links
 def jobSearch():
-    session['filteredJobs'] = []
+    #session['filteredJobs'] = []
     session['offset'] = 0
     return render_template(
             'searchPageJob.jade',
@@ -227,6 +214,9 @@ def jobFilter():
 
     print('-- FORM FIELDS --')
     #print(request.form.get('Pay', '~~~'))
+
+    session['column'] = request.form.get('colTitle', '')
+    session['search'] = request.form.get('jobFullSearch', '')
 
     # text field returns empty string instead of nothing
     p = request.form.get('Pay', '')
@@ -255,9 +245,9 @@ def jobFilter():
         searchJobs(
             request.form.get('jobFullSearch', ''), 
             filtersDict)
-    elif request.form.get('jobFullSearch', '') == '' and filtersDict == None: # TODO: this needs to be if search AND filters are both empty
-        print('-- CLEARING SEARCH --')
-        session['filteredJobs'] = []
+    #elif request.form.get('jobFullSearch', '') == '' and filtersDict == None: # TODO: this needs to be if search AND filters are both empty
+        #print('-- CLEARING SEARCH --')
+        #session['filteredJobs'] = []
 
     fd = ''
     if filtersDict == None:
@@ -287,30 +277,35 @@ def searchJobs(search, filters):
 
 
     jobsData = data()
-    jobsData.create(loc, 1)
-    jobsPage = jobsData.getNJobs(session['offset'], 10)
+    jobsData.create(request.form.get('jobFullSearch', ''), loc, 1)
+    jobsPage = jobsData.getNJobsByQuery(request.form.get('jobFullSearch', ''), request.form.get('colTitle', ''), session['offset'], 10)
 
-    session['filteredJobs'] = []
+    #session['filteredJobs'] = []
+    filteredJobs = []
 
     #print('SEARCH: ', search)
     for job in jobsPage:
-        if search == 'ALL JOBS': # display all available jobs
-            session['filteredJobs'].append(job)
-            continue
+        #if search == 'ALL JOBS': # display all available jobs
+        #    session['filteredJobs'].append(job)
+        #    continue
+
+        if search == 'CLEAR':
+            #session['filteredJobs'] = []
+            break
 
         #print(job)
         jobL = dict((key, tryLow(val)) for key, val in job[1].items()) # convert all vals in the dict to lower
         if filters == None: # no filters used, search by search query
             if any(search.lower() in val for val in jobL.values()):
-                job[0] = len(session['filteredJobs']) # index correction
-                session['filteredJobs'].append(job)
+                job[0] = len(filteredJobs) # index correction
+                filteredJobs.append(job)
                 continue # added job, don't need to keep checking this job
 
         else: # include filters in search
             if any(search.lower() in val for val in jobL.values()):
                 if searchFilters(job[1], filters): 
-                    job[0] = len(session['filteredJobs']) # index correction
-                    session['filteredJobs'].append(job)
+                    job[0] = len(filteredJobs) # index correction
+                    filteredJobs.append(job)
                     continue # added job, don't need to keep checking this job
 
         # filter logic
@@ -350,9 +345,9 @@ def quickSearch():
     if not request.form.get('jobFullSearch', None) == '':
         searchJobs(
             request.form.get('QuickSearch', ''), None)
-    else:
-        print('-- QUICKSEARCH CLEARING SEARCH --')
-        session['filteredJobs'] = []
+    #else:
+        #print('-- QUICKSEARCH CLEARING SEARCH --')
+        #session['filteredJobs'] = []
 
     return render_template(
             'searchPageJob.jade',

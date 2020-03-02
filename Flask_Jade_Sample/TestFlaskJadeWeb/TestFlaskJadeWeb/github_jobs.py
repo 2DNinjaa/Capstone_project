@@ -15,8 +15,13 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 
-# In[20]:
+# converts the given list to a string
+def lst_to_str(lst):
+    return ','.join(lst)
 
+# converts the given string to a list
+def str_to_lst(stri):
+    return stri.split(',')
 
 class data:
     def __init__(self):
@@ -49,7 +54,7 @@ class data:
     
     # sends the data allocated to the database
     def testing(self, allJobs):
-        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        conn = sqlite3.connect("Users.db")
         cursor = conn.cursor()
         
         # create table if not exists
@@ -70,11 +75,18 @@ class data:
                                     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"""
             
             #print(self.jobLst[i]['Skills'])
-            data_tuples = (allJobs[i]['Location'], allJobs[i]['Company'], 
-                           allJobs[i]['Time-Posted'], allJobs[i]['Page-Addr'], 
-                           allJobs[i]['Contract-Type'], allJobs[i]['Title'], 
-                           allJobs[i]['Desc'], self.jobLst[i]['Apply-To'], allJobs[i]['Salary'],
-                           lst_to_str(allJobs[i]['Skills']), allJobs[i]['Category'], lst_to_str(allJobs[i]['Education']))
+            data_tuples = (allJobs[i]['Location'], 
+                           allJobs[i]['Company'], 
+                           allJobs[i]['Time-Posted'], 
+                           allJobs[i]['Page-Addr'], 
+                           allJobs[i]['Contract-Type'], 
+                           allJobs[i]['Title'], 
+                           allJobs[i]['Desc'], 
+                           allJobs[i]['Apply-To'], 
+                           allJobs[i]['Salary'],
+                           lst_to_str(allJobs[i]['Skills']), 
+                           allJobs[i]['Category'], 
+                           lst_to_str(allJobs[i]['Education']))
 
             cursor.execute(insert_query, data_tuples)
 
@@ -105,6 +117,23 @@ class data:
         
         select_query = """select * from Jobs order by jobTitle ASC"""
         cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        return [[records.index(row), dict(row)] for row in records[offset:offset+amt]]
+
+    # modification of getNJobs
+    # similar design but will search the specified column (col) for the search term (term)
+    # return is the same
+    # col MUST BE a column header
+    def getNJobsByQuery (self, term, col, offset, amt):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = 'select * from Jobs where '+ col+ ' like ? order by jobTitle ASC'
+        cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
         records = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -204,8 +233,8 @@ class data:
     #going to be a list of dictionaries ***TBA
     #for now prints out several dictionaries for each job post on the page (50)
     def create(self, job = '', loc = '', numPages = 1):
-        self.testing(self.getJobLLP (loc, numPages) + self.indeedJobs(job, loc, numPages))
-        print("create done")
+        return self.testing(self.hubJobs (job, loc, numPages) + self.indeedJobs(job, loc, numPages))
+        #print("create done")
 
     # returns 4 pieces of the specified page
     #   [string:applyTo_link, list:skills, string:description, string:page_url, list:education]

@@ -3,8 +3,17 @@ extends layoutSeeker
 block content
 	h2 Search for Jobs
 	form(action='/jobFilter', method='post')
+		span Select Search Field:
+			select(name='colTitle')
+				option(value='jobTitle') Title
+				option(value='location') Location
+				option(value='company') Company
+				option(value='jobDes') Description
+				option(value='skills') Skills
+		
 		input.frogGreenBorder(name='jobFullSearch', type='text', placeholder='Search...')
 		button.btn.btn-primary.frogGreen(name='ClearSearch', type='reset', value='RESETSEARCHCODE') Clear
+		//button.btn.btn-primary.frogGreen(name='ClearSearch', type='submit', value='CLEARSEARCH') Clear
 		//button.btn.btn-primary.frogGreen(name='UpdateFilters', type='submit', value='UpdateFilters') Update
 		
 		//br
