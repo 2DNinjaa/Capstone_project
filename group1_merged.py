@@ -102,8 +102,6 @@ class data:
         conn.commit()
         cursor.close()
         conn.close()
-
-
     def searchJobs(self,term):
         'searches backend for whatever search term'
         results=[]
@@ -119,7 +117,37 @@ class data:
             if term in records[i]:
                 results.append(records[i])
         print(len(results))
-        print("DDD")
+        
+        if results==[]:
+            print("YEE")
+            if term not in records[i][0]:
+                print("YeeT")
+                results.append(records[i][0])
+            if term.lower() in records[i][0]:
+                print("Y")
+                results.append(records[i][0])
+            
+            
+        return results
+
+    def locSearch(self,term):#find location of jobs
+        'searches backend for whatever search term'
+        results=[]
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from JOBS """        #change JOBS to whatever table you want to see
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        for i in range(len(records)):
+            if term in records[i][0]:
+                results.append(records[i][0])
+                continue
+            if term.lower() in records[i][0]:
+                print("Y")
+                results.append(records[i][0])
+        #print(len(results))
         return results
 
 
@@ -137,6 +165,7 @@ class data:
         for i in range(len(records)):
             if lCase in records[i][0]:#this is here to make sure that it picks up uppercase/lowercase problems
                 results.append((records[i][0],records[i][2]))
+                continue
             if term in records[i][0]:
                 results.append(records[i])
         return results
