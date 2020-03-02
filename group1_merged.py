@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[79]:
+
 
 
 #Capstone
@@ -15,7 +15,6 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 
-# In[20]:
 
 
 class data:
@@ -48,6 +47,32 @@ class data:
                 
     def __repr__(self):
         return self.exp
+
+    def db(self):
+
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from Users """
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        return records
+
+    def userCreate(self):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        first=input('enter a name\n')
+        token=input('enter a password \n')
+        typ=input('enter a usertype \n')
+        insert_query = """insert or ignore into Users (username,password,usertype) 
+                                    VALUES (?,?,?)"""
+            
+        data_tuples = (first,token,typ)
+
+        cursor.execute(insert_query, data_tuples)
+
+        conn.commit()
+        cursor.close()
+        conn.close()
     
     # TODO: remove function?
     # sends the data allocated to the database
@@ -98,7 +123,7 @@ class data:
         return results
 
 
-    def searchUsers(self,term):
+    def searchUsers(self,term):#need to properly capitalize or there is double count bug
         'searches backend for whatever search term'
         results=[]
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
@@ -108,9 +133,30 @@ class data:
         records = cursor.fetchall()
         cursor.close()
         conn.close()
-        #term="Seeker"
+        lCase=term.lower()
         for i in range(len(records)):
-            if term in records[i]:
+            if lCase in records[i][0]:#this is here to make sure that it picks up uppercase/lowercase problems
+                results.append((records[i][0],records[i][2]))
+            if term in records[i][0]:
+                results.append(records[i])
+        return results
+
+
+
+    def findSeekers(self):#need to properly capitalize or there is double count bug
+        'searches backend for whatever search term'
+        results=[]
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        select_query = """select * from Users """        #change JOBS to whatever table you want to see
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        for i in range(len(records)):
+            if "seeker" in records[i][2]:#this is here to make sure that it picks up uppercase/lowercase problems
+                results.append(records[i])
+            if "Seeker" in records[i][2]:#this is here to make sure that it picks up uppercase/lowercase problems
                 results.append(records[i])
         return results
 
