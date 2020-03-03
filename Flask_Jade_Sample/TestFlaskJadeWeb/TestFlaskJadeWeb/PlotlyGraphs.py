@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
 
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
@@ -18,8 +13,6 @@ import chart_studio.plotly as py
 import plotly.io as pio
 import plotly
 
-
-# In[ ]:
 
 
 def s():

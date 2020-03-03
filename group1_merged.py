@@ -359,6 +359,28 @@ class data:
 
 
 
+    def addCol(self):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        addColumn = "ALTER TABLE Users ADD COLUMN Points Integer"
+        cursor.execute(addColumn)
+        conn.close()
+        return 
+
+    def gamePoints(self,user):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        state='UPDATE Users SET Points = 10 WHERE username="Mike"'#only accepts it like this so far
+        state=state.replace("@",user)
+        #return state
+        with conn:
+            
+            cursor.execute(state)
+        
+        conn.close()
+        return 
+        
+
 
 
 
