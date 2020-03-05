@@ -356,45 +356,28 @@ class data:
         desc = newSoup.find('div', class_='column main').text
         
         return [jobLink, foundSkillsList, desc, url, foundEduList]
-
-
-
     def addCol(self):
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        addColumn = "ALTER TABLE Users ADD COLUMN Resume text"
+        addColumn = "ALTER TABLE Users ADD COLUMN Education text"
         cursor.execute(addColumn)
         conn.close()
         return 
 
-    def gamePoints(self,user):
-
-##        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
-##        cursor = conn.cursor()
-##        select_query = """select * from Users WHERE username= 'Mike' """
-##        cursor.execute(select_query)
-##        records = cursor.fetchall()
-##        return records
-
-
-
-
-        
-        col="username"
+    def gamePoints(self,user,points):
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        #state='UPDATE Users SET Points = 10 WHERE username='+user #only accepts it like this so far
-        p=30
-        cursor.execute('''UPDATE Users SET Points = ? WHERE username = ?''', (p,user))
+        curr="SELECT * FROM Users WHERE username="+'@'+str(user)+'@'
+        curr=curr.replace("@",'"')
+        cursor.execute(curr)
         records = cursor.fetchall()
-        return records
+        points+=records[0][3]
 
-        #state=state.replace("@",user)
-        #return state
+        #update to users part
+        state='UPDATE Users SET Points ='+"@"+str(points)+'@ '+'WHERE username='"@"+str(user)+"@" #only accepts it like this so far
+        state=state.replace("@",'"')
         with conn:
-            
             cursor.execute(state)
-        
         conn.close()
         return 
         
