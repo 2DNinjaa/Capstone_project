@@ -379,7 +379,18 @@ class data:
         with conn:
             cursor.execute(state)
         conn.close()
-        return 
+        return
+
+    def viewPoints(self,user):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        curr="SELECT * FROM Users WHERE username="+'@'+str(user)+'@'
+        curr=curr.replace("@",'"')
+        cursor.execute(curr)
+        records = cursor.fetchall()
+        points=records[0][3]
+        conn.close()
+        return points
 
 
 ##        insert_query = """insert or ignore into Bookmarks (User,Marked) 
