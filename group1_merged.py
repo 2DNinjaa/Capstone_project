@@ -52,7 +52,7 @@ class data:
 
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        select_query = """select * from Users """
+        select_query = """select * from Bookmarks """
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
@@ -356,15 +356,15 @@ class data:
         desc = newSoup.find('div', class_='column main').text
         
         return [jobLink, foundSkillsList, desc, url, foundEduList]
-    def addCol(self):
+    def addCol(self):#need to delete bookmarks table
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
-        addColumn = "ALTER TABLE Users ADD COLUMN Education text"
+        addColumn = "ALTER TABLE Users ADD COLUMN Bookmarks text"
         cursor.execute(addColumn)
         conn.close()
         return 
 
-    def gamePoints(self,user,points):
+    def gamePoints(self,user,points):#updates the point values to the user's total points
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
         cursor = conn.cursor()
         curr="SELECT * FROM Users WHERE username="+'@'+str(user)+'@'
@@ -380,10 +380,61 @@ class data:
             cursor.execute(state)
         conn.close()
         return 
+
+
+##        insert_query = """insert or ignore into Bookmarks (User,Marked) 
+##                          VALUES (?,?)"""
+
+    def book(self,num,user):#updates and creates new entries for Bookmarks table
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        try:#if exists
+            insert_query="SELECT * FROM Bookmarks WHERE User="+'@'+str(user)+'@'
+            cursor.execute(insert_query)
+            records=cursor.fetchall()
+            conn.commit()
+            jobs=records[0][1]
+            lst=self.str_to_lst(jobs)
+            lst.append(str(num))
+            m=self.lst_to_str(lst)
+            state='UPDATE Bookmarks SET Marked ='+"@"+str(m)+'@ '+'WHERE User='"@"+str(user)+"@" 
+            state=state.replace("@",'"')
+            with conn:
+                cursor.execute(state)
+            conn.close()
+            return 
+                        
+
+
+        except sqlite3.OperationalError:
+            insert_query="""insert into Bookmarks(User, Marked)
+            VALUES (?,?)"""
+            data_tuples=(user,num)
+            cursor.execute(insert_query,data_tuples)
+            records=cursor.fetchall()                                                                   
+            conn.commit()
+            return 
+        cursor.close()
+        conn.close()
+    
+        return records
+    def sendMarked(self,user):#sends bookmarked numbers
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        cursor = conn.cursor()
+        curr="SELECT * FROM Bookmarks WHERE User="+'@'+str(user)+'@'
+        curr=curr.replace("@",'"')
+        cursor.execute(curr)
+        records = cursor.fetchall()
+        jobs=records[0][1]
+        return jobs
+
         
 
+        # converts the given list to a string
+    def lst_to_str(self,lst):
+        return ','.join(lst)
 
-
-
-
-
+    # converts the given string to a list
+    def str_to_lst(self,stri):
+        return stri.split(',')
+        
