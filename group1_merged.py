@@ -48,11 +48,27 @@ class data:
     def __repr__(self):
         return self.exp
 
+    def getNUsers(self, offset, amt):
+        conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = """select * from Users order by userName ASC"""
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        return [[records.index(row), dict(row), 'Users'] for row in records[offset:offset+amt]]
+
+    
+
     def db(self):
 
         conn = sqlite3.connect("Flask_Jade_Sample/TestFlaskJadeWeb/Users.db")
+        conn.row_factory=sqlite3.Row
         cursor = conn.cursor()
-        select_query = """select * from Bookmarks """
+        select_query = """select * from Users """
         cursor.execute(select_query)
         records = cursor.fetchall()
         return records
@@ -374,7 +390,7 @@ class data:
         points+=records[0][3]
 
         #update to users part
-        state='UPDATE Users SET Points ='+"@"+str(points)+'@ '+'WHERE username='"@"+str(user)+"@" #only accepts it like this so far
+        state='UPDATE Users SET Points ='+"@"+str(points)+'@ '+'WHERE username="'+str(user)+'"' #only accepts it like this so far
         state=state.replace("@",'"')
         with conn:
             cursor.execute(state)
