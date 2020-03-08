@@ -49,8 +49,8 @@ class data:
         self.mlKeys = ['data mining', 'machine learning', 'cnn', 'rbm', 'machine', 'natural language', 'regression', 'fault diagnosis', 'intrusion detection']
         self.seKeys = ['software engineer', 'software development','code']
         
-    def __repr__(self):
-        return self.exp
+    #def __repr__(self):
+    #    return self.exp
     
     def creatUsersTable(self):
         conn = sqlite3.connect("Users.db")
@@ -65,6 +65,7 @@ class data:
         cursor.close()
         conn.close()
 
+    # todo: remove this
     def checkIfUserExist(self, user):
         conn = sqlite3.connect("Users.db")
         cursor = conn.cursor()
@@ -210,6 +211,7 @@ class data:
         #print('-- LENGTH Q: ' + str(len(records)))
         return [[records.index(row), dict(row), 'Jobs'] for row in records[offset:offset+amt]]
 
+    # TODO: remove this
     # would be used by quicksearch, searches multiple columns at once
     def getNJobsByQueryQuickly (self, term, offset, amt):
         conn = sqlite3.connect("Users.db")
