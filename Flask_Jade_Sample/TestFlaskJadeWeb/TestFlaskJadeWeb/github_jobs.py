@@ -52,6 +52,74 @@ class data:
     def __repr__(self):
         return self.exp
     
+    def creatUsersTable(self):
+        conn = sqlite3.connect("Users.db")
+        cursor = conn.cursor()
+        table_query = """create table if not exists Users
+                            (userName text, passWord text, userType text,
+                            Points integer NOT NULL, email text, skills text, 
+                            bio text, Bookmarks text, location text,
+                            PRIMARY KEY (userName))"""
+        cursor.execute(table_query)
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    def checkIfUserExist(self, user):
+        conn = sqlite3.connect("Users.db")
+        cursor = conn.cursor()
+        
+        select_query = 'select * from Users where userName = ?'
+        cursor.execute(select_query, (user,))
+        records = cursor.fetchall()
+        
+        return True if len(records) == 1 else False
+
+    def gamePoints(self,user,points):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        curr='SELECT * FROM Users WHERE username="'+str(user)+'"'
+        cursor.execute(curr)
+        records = cursor.fetchall()
+        points = points + records[0]['Points']
+        
+        #print([dict(row) for row in records])
+        
+        #update to users part
+        state='UPDATE Users SET Points ='+str(points)+' WHERE username="'+str(user)+'"'
+        print(state)
+        cursor.execute(state)
+        conn.commit()
+        
+        cursor.close()
+        conn.close()
+
+    def updateBookmarks(self, user, bookmarks):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        update_query = 'UPDATE Users SET Bookmarks = ? WHERE username = ?'
+        cursor.execute(update_query, (bookmarks, user,))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    def updateColumn(self, user, col, val):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        update_query = 'UPDATE Users SET ' + col + ' = "' + val + '" WHERE username = "' + user + '"'
+        cursor.execute(update_query)
+        conn.commit()
+        
+        cursor.close()
+        conn.close()
+
     # sends the data allocated to the database
     def testing(self, allJobs):
         conn = sqlite3.connect("Users.db")
@@ -121,7 +189,8 @@ class data:
         cursor.close()
         conn.close()
         
-        return [[records.index(row), dict(row)] for row in records[offset:offset+amt]]
+        #print('-- LENGTH: ' + str(len(records)))
+        return [[records.index(row), dict(row), 'Jobs'] for row in records[offset:offset+amt]]
 
     # modification of getNJobs
     # similar design but will search the specified column (col) for the search term (term)
@@ -133,6 +202,21 @@ class data:
         cursor = conn.cursor()
         
         select_query = 'select * from Jobs where '+ col+ ' like ? order by jobTitle ASC'
+        cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        #print('-- LENGTH Q: ' + str(len(records)))
+        return [[records.index(row), dict(row), 'Jobs'] for row in records[offset:offset+amt]]
+
+    # would be used by quicksearch, searches multiple columns at once
+    def getNJobsByQueryQuickly (self, term, offset, amt):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = 'select * from Jobs where jobTitle, company, location, skills, jobType like ? order by jobTitle ASC'
         cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
         records = cursor.fetchall()
         cursor.close()
@@ -153,6 +237,60 @@ class data:
         conn.close()
         
         return [dict(row) for row in records][int(n)]
+
+    def getNthUser(self, n):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = """select * from Users order by userName ASC"""
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        return [dict(row) for row in records][int(n)]
+
+    def getNUsers(self, offset, amt):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = """select * from Users order by userName ASC"""
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        return [[records.index(row), dict(row), 'Users'] for row in records[offset:offset+amt]]
+
+    def getNUsersByQuery (self, term, col, offset, amt):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = 'select * from Users where '+ col+ ' like ? order by userName ASC'
+        cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        #print('-- LENGTH Q: ' + str(len(records)))
+        return [[records.index(row), dict(row), 'Users'] for row in records[offset:offset+amt]]
+
+    def getUserByName(self, name):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = 'select * from Users where userName = ?'
+        cursor.execute(select_query, (name,))
+        records = cursor.fetchall()
+        if len(records) == 1:
+            return [dict(row) for row in records][0]
+        else:
+            print('-- ERROR: COULD NOT FIND USER: ' + name + ' --')
+            return None
 
     # deletes the jobs table entirely
     def destroyJobs(self):
@@ -189,6 +327,7 @@ class data:
             loc = '' if loc == '' else ('&location=' + loc.replace(' ', '+'))
             jobX = '' if jobX == '' else ('&description=' + jobX.replace(' ', '+'))
             finalURL = 'https://jobs.github.com/positions?utf8=✓' + loc + '&page=' + str(i) + jobX
+            print(finalURL)
             #finalURL = url + loc # including location in filters
             
             source = requests.get(finalURL).text
@@ -309,8 +448,8 @@ class data:
     # gets a list of dictionaries limited by the input parameters through indeed
     def indeedJobs(self, job, location, maxPages):
         print('entering indeed jobs')
-        baseLink = 'https://www.indeed.com/'
-        webAddr = baseLink + ('' if job == '' else 'jobs?q=' + job.replace (' ', '+'))
+        baseLink = 'https://www.indeed.com/q-computer-science-jobs'
+        webAddr = baseLink + ('' if job == '' else '?q=' + job.replace (' ', '+'))
         webAddr = webAddr + ('' if location == '' else '&l=' + location) + '&start=0'
 
         jbPages = []
@@ -319,6 +458,7 @@ class data:
             #jbPages.append(self.getDictNew(link))
             source = requests.get(link).text
             soup = BeautifulSoup(source, 'lxml')
+            print(link)
 
             for div in soup.find_all ('div', class_='row', attrs={'class':'row'}):
                 linkElem = div.find('div', class_='title').a

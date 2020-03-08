@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
+    <Content Include="TestFlaskJadeWeb\static\favicon.ico" />
     <Content Include="TestFlaskJadeWeb\models\samples.json" />
     <Content Include="TestFlaskJadeWeb\static\content\bootstrap.css" />
     <Content Include="TestFlaskJadeWeb\static\content\bootstrap.min.css" />
@@ -77,8 +78,11 @@
     <Content Include="TestFlaskJadeWeb\static\scripts\script.js" />
     <Content Include="TestFlaskJadeWeb\static\scripts\_references.js" />
     <Content Include="TestFlaskJadeWeb\templates\anonHome.jade" />
+    <Content Include="TestFlaskJadeWeb\templates\profileUser.jade" />
+    <Content Include="TestFlaskJadeWeb\templates\postJobs.jade" />
     <Content Include="TestFlaskJadeWeb\templates\pageJob.jade" />
     <Content Include="TestFlaskJadeWeb\templates\LayoutSideBar.jade" />
+    <Content Include="TestFlaskJadeWeb\templates\searchPageUser.jade" />
     <Content Include="TestFlaskJadeWeb\templates\searchPageJob.jade" />
     <Content Include="TestFlaskJadeWeb\templates\indexManager.jade" />
     <Content Include="TestFlaskJadeWeb\templates\layoutAnon.jade" />

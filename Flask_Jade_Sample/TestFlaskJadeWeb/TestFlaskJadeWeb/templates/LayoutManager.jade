@@ -4,6 +4,8 @@ html
         meta(charset='utf-8')
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
         title #{title} - Job Hopper
+        link(rel='shortcut icon', href="{{ url_for('static', filename='favicon.ico') }}")
+
         link(rel='stylesheet', type='text/css', href='/static/content/bootstrap.min.css')
         link(rel='stylesheet', type='text/css', href='/static/content/site.css')
 
@@ -26,11 +28,14 @@ html
                         li
                             a.frogGreen(href='/post') Post
                         li
-                            a.frogGreen(href='/tmpGraph') Graph
+                            a.frogGreen(href='/managerSearch') Search
+                        li
+                            a.frogGreen(href='/managerGraph') Graph
                         li
                             a.frogGreen(href='/about') About
                         li
                             a.frogGreen(href='/logout') Logout
+                        a.navSearch.frogGreen(href='/managerProfile') Profile
         .container.body-content
             block content
             hr

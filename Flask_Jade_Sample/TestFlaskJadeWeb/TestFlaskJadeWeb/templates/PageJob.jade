@@ -26,7 +26,7 @@ html
 		.BodyContent(style='margin-top:75px; padding-left:5%; padding-right:5%; width:90%')
 			.inline
 				h2 #{jobTitle}
-				a(href='#') Bookmark
+				a(href='/bookmark/#{jobIndex}') Bookmark
 				br
 				br
 				h4 #{jobCompany}
@@ -37,8 +37,7 @@ html
 				br
 				br
 				a(href='#{applyTo}')
-					| Apply at 
-					span #{jobCompany}
+					span #{spanApply}
 			br
 			hr
 			br
