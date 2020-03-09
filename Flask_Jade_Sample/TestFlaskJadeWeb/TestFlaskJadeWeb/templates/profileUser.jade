@@ -1,0 +1,25 @@
+extends layoutSeeker
+
+block content
+	h3 Update your profile #{name}
+	h3 #{points} total points, #{frogRank} frog
+
+	form(action='/UpdateUserProfile', method='post')
+		input(type='text', name='UserName', placeholder='Display Name')
+		input(type='email', name='email', placeholder='email')
+		input(type='text', name='Location', placeholder='Location')
+
+		br
+		span Please add one skill at a time
+		input(type='text', name='skill', placeholder='Skill')
+
+		span select a skill to remove
+		select(name='Skills')
+			option(value='None') N/A
+			each skill in skills
+				option(value= skill)= skill
+				//option= skill
+
+		br
+		br
+		button.btn.btn-primary.frogGreen(name='ClearSearch', type='submit', value='Submit') submit

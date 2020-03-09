@@ -24,10 +24,18 @@ function loadItems() {
                 //template_clone.querySelector("#postLink")["href"] =
                 //   Flask.url_for('jobPage', { cnt: `${data[i][0]}`});
 
-                template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['jobTitle']}`;
-                template_clone.querySelector("#company").innerHTML = `${data[i][1]['company']}`;
-                template_clone.querySelector("#location").innerHTML = `${data[i][1]['location']}` + ', ';
-                template_clone.querySelector("#pay").innerHTML = `${data[i][1]['salary']}`;
+                if (`${data[i][2]}` == 'Jobs') {
+                    template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['jobTitle']}`;
+                    template_clone.querySelector("#company").innerHTML = `${data[i][1]['company']}`;
+                    template_clone.querySelector("#location").innerHTML = `${data[i][1]['location']}` + ', ';
+                    template_clone.querySelector("#pay").innerHTML = `${data[i][1]['salary']}`;
+
+                } else {
+                    template_clone.querySelector("#title").innerHTML = `${data[i][0]}: ${data[i][1]['userName']}`;
+                    template_clone.querySelector("#company").innerHTML = `${data[i][1]['skills']}`;
+                    template_clone.querySelector("#location").innerHTML = `${data[i][1]['location']}` + ', ';
+                    //template_clone.querySelector("#pay").innerHTML = `${data[i][1]['salary']}`;
+                }
                 // Append template to dom
                 scroller.appendChild(template_clone);
 
