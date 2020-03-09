@@ -1,0 +1,12 @@
+extends LayoutManager
+
+block content
+	h3 Post Jobs
+	form(action='/PostJobs', method='post')
+		input.frogGreenBorder(type='text', name='JobTitle', placeholder='Title')
+		input.frogGreenBorder(type='text', name='Company', placeholder='Company')
+		input.frogGreenBorder(type='text', name='Salary', placeholder='Salary')
+
+		br
+		br
+		button.btn.btn-primary.frogGreen(name='ClearSearch', type='submit', value='Submit') submit
