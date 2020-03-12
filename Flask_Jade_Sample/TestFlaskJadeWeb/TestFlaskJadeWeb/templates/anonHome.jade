@@ -1,6 +1,9 @@
 extends layoutAnon
 
 block content
+	div#loader(style='width:100%; height:100%; background:white')
+		img#loader(src='#{getFrog}')
+
 	div.BodyContent(style='width:100%;')
 		h2 Login or Register
 		br
@@ -34,3 +37,11 @@ block content
 			div(style='display:flex; width: 50%; margin: auto;')
 				button.btn.btn-primary.center.frogGreen(style='margin:0% 1%;', type='submit', name='Enter', value='L') Log In
 				button.btn.btn-primary.center.frogGreen(style='margin:0% 1%;', type='submit', name='Enter', value='R') Register
+
+			br
+			div
+				span Please read the following TOS before registering: 
+				a(href='/FrogTermsCond') Frog Hopper TOS
+
+	script.
+		$(window).load(function() {$("#loader").fadeOut("slow");;});

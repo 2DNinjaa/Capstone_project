@@ -6,6 +6,9 @@ html
     title Login - Job Hopper
     link(rel='shortcut icon', href="{{ url_for('static', filename='favicon.ico') }}")
 
+    
+    link(rel='stylesheet', type='text/css', href='/static/scripts/modernizr-2.6.2.js')
+
     link(rel='stylesheet', type='text/css', href='/static/content/bootstrap.min.css')
     link(rel='stylesheet', type='text/css', href='/static/content/site.css')
 
@@ -13,7 +16,16 @@ html
     link(rel='stylesheet', type='text/css', href='/static/content/StylesNavbar.css')
 
     script(src='/static/scripts/modernizr-2.6.2.js')
+
+    style.
+        .no-js #loader { display:none }
+        .js #loader { display: block; position: absolute; left: 100px; top: 0; }
+
   body
+    script(src='/static/scripts/jquery-1.10.2.js')
+    script(src='/static/scripts/bootstrap.js')
+    script(src='/static/scripts/respond.js')
+
     .navbar.navbar-inverse.navbar-fixed-top.frogNav
       .container
         .navbar-header
@@ -27,9 +39,5 @@ html
       hr
       footer
         p &copy; #{year} - Find CS Jobs
-
-    script(src='/static/scripts/jquery-1.10.2.js')
-    script(src='/static/scripts/bootstrap.js')
-    script(src='/static/scripts/respond.js')
 
     block scripts

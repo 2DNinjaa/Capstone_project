@@ -58,7 +58,7 @@ class data:
         table_query = """create table if not exists Users
                             (userName text, passWord text, userType text,
                             Points integer NOT NULL, email text, skills text, 
-                            bio text, Bookmarks text, location text,
+                            bio text, location text,
                             PRIMARY KEY (userName))"""
         cursor.execute(table_query)
         conn.commit()
@@ -96,12 +96,27 @@ class data:
         cursor.close()
         conn.close()
 
+    def getUserBookmarks(self, user):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        select_query = 'SELECT * FROM Bookmarks WHERE User = "' + user + '"'
+        cursor.execute(select_query)
+        
+        records = cursor.fetchall()
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return [dict(row) for row in records]
+
     def updateBookmarks(self, user, bookmarks):
         conn = sqlite3.connect("Users.db")
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        update_query = 'UPDATE Users SET Bookmarks = ? WHERE username = ?'
+        update_query = 'UPDATE Bookmarks SET Bookmarks = ? WHERE username = ?'
         cursor.execute(update_query, (bookmarks, user,))
         
         conn.commit()
@@ -201,14 +216,23 @@ class data:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        select_query = 'select * from Jobs where '+ col+ ' like ? order by jobTitle ASC'
-        cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
+        if col[1] == 'None' and col[2] == 'None':
+            select_query = 'select * from Jobs where '+ col+ ' like ? order by jobTitle ASC'
+            cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
+        
+        elif not col[1] == 'None' and col[2] == 'None':
+            select_query = 'select * from Jobs where '+ col[0] + ' like ? and ' + col[1] + ' like ? ' + ' order by jobTitle ASC'
+            cursor.execute(select_query, ('%'+term[0]+'%', '%'+term[1]+'%')) # pattern matching
+        
+        elif not col[1] == 'None' and not col[2] == 'None':
+            select_query = 'select * from Jobs where '+ col[0] + ' like ? and ' + col[1] + ' like ? and ' + col[2] + ' like ? ' + ' order by jobTitle ASC'
+            cursor.execute(select_query, ('%'+term[0]+'%', '%'+term[1]+'%', '%'+term[2]+'%',)) # pattern matching
+        
         records = cursor.fetchall()
         cursor.close()
         conn.close()
         
-        #print('-- LENGTH Q: ' + str(len(records)))
-        return [[records.index(row), dict(row), 'Jobs'] for row in records[offset:offset+amt]]
+        return [[records.index(row), dict(row)] for row in records[offset:offset+amt]]
 
     # would be used by quicksearch, searches multiple columns at once
     def getNJobsByQueryQuickly (self, term, offset, amt):

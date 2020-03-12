@@ -1,25 +1,41 @@
 extends layoutSeeker
 
 block content
-	h3 Update your profile #{name}
-	h3 #{points} total points, #{frogRank} frog
+	h3 Update your profile #{name} 
+	h3 #{points} total points
+	img(src='#{ProfileIMG}')
 
-	form(action='/UpdateUserProfile', method='post')
-		input(type='text', name='UserName', placeholder='Display Name')
-		input(type='email', name='email', placeholder='email')
-		input(type='text', name='Location', placeholder='Location')
+	div
+		a.btn.btn-primary.frogGreen(href='/seekerProfile?EDIT=yes') Edit Profile
+		a.btn.btn-primary.frogGreen(href='/seekerProfile?EDIT=no' style='margin-left:8px') Cancel
+
+	div(style='display:#{editProfile}')
+		form(action='/UpdateUserProfile', method='post', style='margin:8px')
+			input.frogGreenBorder(type='text', name='UserName', placeholder='Display Name')
+			input.frogGreenBorder(type='email', name='email', placeholder='email')
+			input.frogGreenBorder(type='text', name='Location', placeholder='Location')
+
+			br
+			span Please add one skill at a time
+			input.frogGreenBorder(type='text', name='skill', placeholder='Skill', style='margin-top:4px')
+
+			span(style='margin-left:4px') select a skill to remove
+			select(name='Skills')
+				option(value='None') N/A
+				each skill in skills
+					option(value= skill)= skill
+					//option= skill
+
+			br
+			br
+			button.btn.btn-primary.frogGreen(name='ClearSearch', type='submit', value='Submit') submit
+
+	br
+	div
+		span Email: #{email}
 
 		br
-		span Please add one skill at a time
-		input(type='text', name='skill', placeholder='Skill')
-
-		span select a skill to remove
-		select(name='Skills')
-			option(value='None') N/A
-			each skill in skills
-				option(value= skill)= skill
-				//option= skill
+		span Skills: #{skills}
 
 		br
-		br
-		button.btn.btn-primary.frogGreen(name='ClearSearch', type='submit', value='Submit') submit
+		span Location: #{location}

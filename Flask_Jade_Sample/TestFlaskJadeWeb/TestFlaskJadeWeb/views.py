@@ -4,7 +4,7 @@ Routes and views for the flask application.
 
 from datetime import datetime
 
-from flask import render_template, redirect, request, session, make_response, jsonify
+from flask import render_template, redirect, request, session, make_response, jsonify, url_for, send_file
 
 from TestFlaskJadeWeb import app
 from TestFlaskJadeWeb.models import PollNotFound
@@ -22,6 +22,19 @@ repository = create_repository(REPOSITORY_NAME, REPOSITORY_SETTINGS)
 #posts = 200  # num posts to generate
 #quantity = 10  # num posts to return per request
 
+#frogHop = url_for('static', filename='frog hop.gif')
+
+def getProfileIMG():
+    rank = getRank()
+    if rank == 'Bronze':
+        return 'static/BRONZEFROG.png'
+    elif rank == 'Silver':
+        return 'static/SILVERFROG.png'
+    elif rank == 'Gold':
+        return 'static/GOLFGROG.png'
+    elif rank == 'Platinum':
+        return 'static/PLATFROG.png'
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -38,11 +51,13 @@ def home():
     elif userType == 'Manager':
         pageName = 'indexManager.jade'
 
+    frogHop = url_for('static', filename='loop frog.gif')
     uName = session.get('UserName', 'Unknown') # load a default value if retrieval fails
     return render_template(
         pageName,
         title='Home',
         name=uName,
+        getFrog=frogHop,
         year=datetime.now().year,
     )
 
@@ -61,18 +76,48 @@ def logout():
 def graph():
     """Renders the temp graph page"""
     port_to_csv()
+
+    source = ''
+    if request.form.get('GraphType', '') == '':
+        source = url_for('static', filename='frog no graph.png')
+    else:
+        source = s_modular(request.form.get('GraphType', ''), '')
+
     return render_template(
         'tmpGraph.jade',
         title="Graph",
         year=datetime.now().year,
-        src=s_modular(request.form.get('GraphType', ''), '')
+        src=source
     )
+
+@app.route('/FrogTermsCond')
+def servePDF():
+    return send_file('static/jobHopper_terms_cond.pdf', as_attachment=True)
 
 @app.route('/graphOptions', methods=['POST'])
 def graphOptions():
-    return render_template('tmpGraph.jade', title = 'Graph', 
-                           src = s_modular(request.form.get('GraphType', ''), '', 
-                                           request.form.get('xAxis', ''), request.form.get('yAxis', '')))
+    source = ''
+    if request.form['GraphSrc'] == 'FS':
+        source = "https://plot.ly/~lbecker7/16.embed"
+
+    elif request.form['GraphSrc'] == 'FC':
+        source = "https://plot.ly/~lbecker7/19.embed"
+
+    elif request.form['GraphSrc'] == 'FE':
+        source = "https://plot.ly/~lbecker7/51.embed"
+
+    elif request.form['GraphSrc'] == 'CS':
+        source = "https://plot.ly/~kayleenvasil/75.embed"
+
+    elif request.form['GraphSrc'] == 'ES':
+        source = "https://plot.ly/~lbecker7/41.embed"
+
+    elif request.form['GraphSrc'] == 'LC':
+        source = "https://plot.ly/~kayleenvasil/7.embed"
+
+    return render_template('tmpGraph.jade', 
+                           title = 'Graph', 
+                           src = source)
 
 @app.route('/contact')
 def contact():
@@ -111,11 +156,15 @@ def getRank():
 @app.route('/seekerProfile')
 def userProfile():
     userDict = data().getUserByName(session['UserName'])
+    edit = 'block' if request.args.get("EDIT") == 'yes' else 'none'
+
     return render_template('profileUser.jade', 
                            title = 'Profile', 
                            name = userDict['userName'], 
                            points = userDict['Points'],
-                           frogRank = getRank(),
+                           email = userDict['email'],
+                           editProfile = edit,
+                           ProfileIMG = getProfileIMG(),
                            skills = str_to_lst(userDict['skills']) if not userDict['skills'] == None else '')
 
 @app.route('/UpdateUserProfile', methods=['POST'])
@@ -151,6 +200,7 @@ def updateUserProfile():
                            title = 'Profile', 
                            name = userDict['userName'], 
                            points = userDict['Points'],
+                           email = userDict['email'],
                            frogRank = getRank(),
                            skills = str_to_lst(userDict['skills']) if not userDict['skills'] == None else '')
 
@@ -165,16 +215,18 @@ def submitJob():
 
 @app.route('/bookmark/<ind>')
 def bookmark(ind):
-    userRecords = data().getUserByName(session['UserName'])
-    bookmarks = userRecords['Bookmarks']
-    bmLst = str_to_lst(bookmarks)
+    #userRecords = data().getUserByName(session['UserName'])
+    #bookmarks = userRecords['Bookmarks']
+    #bmLst = str_to_lst(bookmarks)
 
-    if not ind in bmLst:
-        bmLst.append(str(ind))
-    bookmarks = lst_to_str(bmLst)
-    data().updateBookmarks(session['UserName'], bookmarks)
+    #if not ind in bmLst:
+    #    bmLst.append(str(ind))
+    #bookmarks = lst_to_str(bmLst)
+    #data().updateBookmarks(session['UserName'], bookmarks)
 
-    data().gamePoints(session['UserName'], 5)
+    #data().gamePoints(session['UserName'], 5)
+
+    data().updateBookmarks(session['UserName'], ind)
     return render_template('searchPageJob.jade', title = 'Search')
 
 @app.route('/jobPage/<cnt>')
@@ -220,7 +272,9 @@ def load():
         if session.get('search', '') == '':
             res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
         else:
-            res = make_response (jsonify (d.getNJobsByQuery(session['search'], session['column'], session['offset'], 10)), 200)
+            searchLst = [session['search'], session['search2'], session['search3']]
+            colLst = [session['column'], session['column2'], session['column3']]
+            res = make_response (jsonify (d.getNJobsByQuery(searchLst, colLst, session['offset'], 10)), 200)
             #print('OFFSET ' + str(session['offset']))
     
     elif session['UserType'] == 'Manager':

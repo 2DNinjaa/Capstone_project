@@ -5,23 +5,42 @@ block content
     //br
     form(action='/graphOptions', method='post')
         div
-            span X-Axis:
-            select(name='xAxis')
-                option(value='salary') Salary
-                option(value='location') Location
-                option(value='company') Company
-
-            span Y-Axis:
-            select(name='yAxis')
-                option(value='salary') Salary
-                option(value='location') Location
-                option(value='company') Company
+            span Select Graph:
 
             br
-            span Select type of graph:
-            button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Scatter') Scatter
-            button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Pie') Pie
-            button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Bar') Bar
+            div
+                span Frequency Graphs: 
+                button.btn.btn-primary.frogGreen(name='GraphSrc', type='submit', value='FS') Skill
+                button.btn.btn-primary.frogGreen(name='GraphSrc', type='submit', value='FC') Job Category
+                button.btn.btn-primary.frogGreen(name='GraphSrc', type='submit', value='FE') Education
+
+            br
+            div
+                span X vs. Salary: 
+                button.btn.btn-primary.frogGreen(name='GraphSrc', type='submit', value='CS') Job Category
+                button.btn.btn-primary.frogGreen(name='GraphSrc', type='submit', value='ES') Education
+            
+            br
+            span Other:
+            button.btn.btn-primary.frogGreen(name='GraphSrc', type='submit', value='LC') Location vs. Company
+
+            //span X-Axis:
+            //select(name='xAxis')
+            //    option(value='salary') Salary
+            //    option(value='location') Location
+            //    option(value='company') Company
+
+            //span Y-Axis:
+            //select(name='yAxis')
+            //    option(value='salary') Salary
+            //    option(value='location') Location
+            //    option(value='company') Company
+
+            //br
+            //span Select type of graph:
+            //button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Scatter') Scatter
+            //button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Pie') Pie
+            //button.btn.btn-primary.frogGreen(name='GraphType', type='submit', value='Bar') Bar
 
     br
     //iframe(id='igraph', scrolling='no', style='border:none', seamless='seamless', src=#{src}, height='525', width='100%')
