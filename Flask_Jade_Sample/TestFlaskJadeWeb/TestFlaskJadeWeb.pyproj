@@ -90,6 +90,7 @@
     <Content Include="TestFlaskJadeWeb\templates\LayoutSideBar.jade" />
     <Content Include="TestFlaskJadeWeb\templates\postJobs.jade" />
     <Content Include="TestFlaskJadeWeb\templates\profileUser.jade" />
+    <Content Include="TestFlaskJadeWeb\templates\bookmarks.jade" />
     <Content Include="TestFlaskJadeWeb\templates\searchPageJob.jade" />
     <Content Include="TestFlaskJadeWeb\templates\indexManager.jade" />
     <Content Include="TestFlaskJadeWeb\templates\layoutAnon.jade" />

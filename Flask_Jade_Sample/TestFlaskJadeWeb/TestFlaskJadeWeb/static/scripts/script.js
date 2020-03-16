@@ -4,9 +4,10 @@ var sentinel = document.querySelector('#sentinel');
 var counter = 0;
 
 function loadItems() {
+    var title = $(document).find("title").text();
 
     // Use fetch to request data and pass the counter value in the QS
-    fetch(`/load?c=${counter}`).then((response) => {
+    fetch(`/load?c=${counter}?t=${title}`).then((response) => {
 
         // Convert the response data to JSON
         response.json().then((data) => {
@@ -20,7 +21,11 @@ function loadItems() {
             // Iterate over the items in the response
             for (var i = 0; i < data.length; i++) {
                 let template_clone = template.content.cloneNode(true);
-                template_clone.querySelector("#postLink")["href"] = "jobPage/" + `${data[i][0]}`;
+                if (title.includes('Bookmark')){
+                    template_clone.querySelector("#postLink")["href"] = "bookmarkPage/" + `${data[i][0]}`;
+                } else {
+                    template_clone.querySelector("#postLink")["href"] = "jobPage/" + `${data[i][0]}`;
+                }
                 //template_clone.querySelector("#postLink")["href"] =
                 //   Flask.url_for('jobPage', { cnt: `${data[i][0]}`});
 

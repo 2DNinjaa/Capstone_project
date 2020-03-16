@@ -101,7 +101,7 @@ class data:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
-        select_query = 'SELECT * FROM Bookmarks WHERE User = "' + user + '"'
+        select_query = 'SELECT * FROM Bookmarks WHERE User = "' + user + '" ORDER BY title ASC'
         cursor.execute(select_query)
         
         records = cursor.fetchall()
@@ -111,13 +111,15 @@ class data:
         conn.close()
         return [dict(row) for row in records]
 
-    def updateBookmarks(self, user, bookmarks):
+    # inserts into the bookmarks table a new row with the following information
+    # user for retrieval, and the following three items because they're the primary key in the jobs table
+    def updateBookmarks(self, user, title, comp, loc):
         conn = sqlite3.connect("Users.db")
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        update_query = 'UPDATE Bookmarks SET Bookmarks = ? WHERE username = ?'
-        cursor.execute(update_query, (bookmarks, user,))
+        update_query = 'INSERT OR IGNORE INTO Bookmarks (User, title, company, location) VALUES (?, ?, ?, ?)'
+        cursor.execute(update_query, (user, title, comp, loc,))
         
         conn.commit()
         cursor.close()
@@ -190,6 +192,37 @@ class data:
         cursor.close()
         conn.close()
         return [dict(row) for row in records]
+
+    def getNUserBookmarks(self, user, offset, amt):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        select_query = 'SELECT * FROM Bookmarks WHERE User = "' + user + '" ORDER BY title ASC'
+        cursor.execute(select_query)
+        
+        records = cursor.fetchall()
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return [[records.index(row), data().getJobByKey(dict(row)['title'], dict(row)['company'], dict(row)['location']), 'Jobs'] for row in records[offset:offset+amt]]
+
+    def getJobByKey(self, title, com, loc):
+        conn = sqlite3.connect("Users.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        select_query = """SELECT * FROM Jobs 
+                            WHERE jobTitle = ? and company = ? and location = ?"""
+        cursor.execute (select_query, (title, com, loc,))
+        
+        records = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        return [dict(row) for row in records][0]
 
     # returns tuple list of jobs starting from the offset and getting as many as amount
     # 0 based indexing means offset at 1 will start at second index

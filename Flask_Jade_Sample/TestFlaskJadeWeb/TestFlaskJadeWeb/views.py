@@ -90,6 +90,11 @@ def graph():
         src=source
     )
 
+@app.route('/bookmarks')
+def viewBookmarks():
+    return render_template('bookmarks.jade',
+                           title = 'Bookmarks')
+
 @app.route('/FrogTermsCond')
 def servePDF():
     return send_file('static/jobHopper_terms_cond.pdf', as_attachment=True)
@@ -213,21 +218,26 @@ def submitJob():
     print('test')
     #TODO: add job to jobs table
 
-@app.route('/bookmark/<ind>')
-def bookmark(ind):
-    #userRecords = data().getUserByName(session['UserName'])
-    #bookmarks = userRecords['Bookmarks']
-    #bmLst = str_to_lst(bookmarks)
-
-    #if not ind in bmLst:
-    #    bmLst.append(str(ind))
-    #bookmarks = lst_to_str(bmLst)
-    #data().updateBookmarks(session['UserName'], bookmarks)
-
-    #data().gamePoints(session['UserName'], 5)
-
-    data().updateBookmarks(session['UserName'], ind)
+@app.route('/bookmark/<title>/<comp>/<loc>')
+def bookmark(title, comp, loc):
+    data().updateBookmarks(session['UserName'], title, comp, loc)
     return render_template('searchPageJob.jade', title = 'Search')
+
+@app.route('/bookmarkPage/<cnt>')
+def bookmarkPage(cnt):
+    book = data().getUserBookmarks(session['UserName'])[int(cnt)]
+    job = data().getJobByKey(book['title'], book['company'], book['location'])
+    return render_template('pageJob.jade',
+                           title = job['jobTitle'],
+                           jobTitle = job['jobTitle'],
+                           jobCompany = job['company'],
+                           jobContract = job['jobType'],
+                           jobLoc = job['location'],
+                           jobDesc = job['jobDes'],
+                           applyTo = job['jobApp'],
+                           pay = job['salary'],
+                           spanApply = 'Apply at ' + job['company'],
+                           jobIndex = cnt)
 
 @app.route('/jobPage/<cnt>')
 def jobPage(cnt):
@@ -260,22 +270,29 @@ def jobPage(cnt):
 
 @app.route('/load')
 def load():
-    counter = int(request.args.get("c"))  # The 'counter' value sent in the QS
+    counter = int(request.args.get("c").split('?')[0])  # The 'counter' value sent in the QS
     session['offset'] = counter
 
     d = data()
+    print(request.args.get('c').split('?')[1])
 
     #if counter < posts: # TODO: change posts value
     print(f"2) Returning posts {counter} to {counter + 10}")
         
     if session['UserType'] == 'Seeker':
-        if session.get('search', '') == '':
-            res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
+        if 'Bookmarks' in request.args.get('c').split('?')[1]:
+            #if session.get('search', '') == '':
+            #print(d.getNUserBookmarks(session['UserName'], session['offset'], 10))
+            res = make_response (jsonify (d.getNUserBookmarks(session['UserName'], session['offset'], 10)), 200)
+
         else:
-            searchLst = [session['search'], session['search2'], session['search3']]
-            colLst = [session['column'], session['column2'], session['column3']]
-            res = make_response (jsonify (d.getNJobsByQuery(searchLst, colLst, session['offset'], 10)), 200)
-            #print('OFFSET ' + str(session['offset']))
+            if session.get('search', '') == '':
+                res = make_response (jsonify (d.getNJobs(session['offset'], 10)), 200)
+            else:
+                searchLst = [session['search'], session['search2'], session['search3']]
+                colLst = [session['column'], session['column2'], session['column3']]
+                res = make_response (jsonify (d.getNJobsByQuery(searchLst, colLst, session['offset'], 10)), 200)
+                #print('OFFSET ' + str(session['offset']))
     
     elif session['UserType'] == 'Manager':
         if session.get('search', '') == '':

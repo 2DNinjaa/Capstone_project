@@ -1,7 +1,7 @@
-extends layoutSeeker
+extends LayoutManager
 
 block content
-	h2 Search for Jobs
+	h2 Search for Users
 	form(action='/jobFilter', method='post')
 		span Select Search Field:
 			select(name='colTitle')
