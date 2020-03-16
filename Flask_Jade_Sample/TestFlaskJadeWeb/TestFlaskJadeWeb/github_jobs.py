@@ -250,8 +250,8 @@ class data:
         cursor = conn.cursor()
         
         if col[1] == 'None' and col[2] == 'None':
-            select_query = 'select * from Jobs where '+ col+ ' like ? order by jobTitle ASC'
-            cursor.execute(select_query, ('%'+term+'%',)) # pattern matching
+            select_query = 'select * from Jobs where '+ col[0] + ' like ? order by jobTitle ASC'
+            cursor.execute(select_query, ('%'+term[0]+'%',)) # pattern matching
         
         elif not col[1] == 'None' and col[2] == 'None':
             select_query = 'select * from Jobs where '+ col[0] + ' like ? and ' + col[1] + ' like ? ' + ' order by jobTitle ASC'
@@ -261,11 +261,12 @@ class data:
             select_query = 'select * from Jobs where '+ col[0] + ' like ? and ' + col[1] + ' like ? and ' + col[2] + ' like ? ' + ' order by jobTitle ASC'
             cursor.execute(select_query, ('%'+term[0]+'%', '%'+term[1]+'%', '%'+term[2]+'%',)) # pattern matching
         
+        print(select_query)
         records = cursor.fetchall()
         cursor.close()
         conn.close()
         
-        return [[records.index(row), dict(row)] for row in records[offset:offset+amt]]
+        return [[records.index(row), dict(row), 'Jobs'] for row in records[offset:offset+amt]]
 
     # would be used by quicksearch, searches multiple columns at once
     def getNJobsByQueryQuickly (self, term, offset, amt):
