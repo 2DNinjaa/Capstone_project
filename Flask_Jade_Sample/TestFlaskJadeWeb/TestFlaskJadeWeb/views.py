@@ -66,9 +66,10 @@ def logout():
     # logs out users, removes session info and redirects to home page
     # home page will display the login screen
 
-    session['UserType'] = None
-    session['UserName'] = None
-    session['offset'] = 0
+    session.clear()
+    #session['UserType'] = None
+    #session['UserName'] = None
+    #session['offset'] = 0
 
     return redirect('/')
 
@@ -168,6 +169,8 @@ def userProfile():
                            name = userDict['userName'], 
                            points = userDict['Points'],
                            email = userDict['email'],
+                           location = userDict['location'],
+                           bio = userDict['bio'],
                            editProfile = edit,
                            ProfileIMG = getProfileIMG(),
                            skills = str_to_lst(userDict['skills']) if not userDict['skills'] == None else '')
@@ -182,6 +185,9 @@ def updateUserProfile():
 
     if not request.form.get('Location', '') == '':
         data().updateColumn(session['UserName'], 'location', request.form['Location'])
+
+    if not request.form.get('bio', '') == '':
+        data().updateColumn(session['UserName'], 'bio', request.form['bio'])
 
     userDict = data().getUserByName(session['UserName'])
     if not request.form.get('skill', '') == '':
@@ -206,7 +212,9 @@ def updateUserProfile():
                            name = userDict['userName'], 
                            points = userDict['Points'],
                            email = userDict['email'],
-                           frogRank = getRank(),
+                           location = userDict['location'],
+                           bio = userDict['bio'],
+                           ProfileIMG = getProfileIMG(),
                            skills = str_to_lst(userDict['skills']) if not userDict['skills'] == None else '')
 
 @app.route('/post')
@@ -299,6 +307,8 @@ def load():
             users = [row for row in d.getNUsers(session['offset'], 10) if row[1]['userType'] == 'Seeker']
             res = make_response (jsonify (users), 200)
         else:
+            searchLst = [session['search'], session['search2'], session['search3']]
+            colLst = [session['column'], session['column2'], session['column3']]
             users = [row for row in d.getNUsersByQuery(session['search'], session['column'], session['offset'], 10) if row[1]['userType'] == 'Seeker']
             res = make_response (jsonify (users), 200)
 
